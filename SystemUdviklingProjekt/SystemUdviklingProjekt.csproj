@@ -10,4 +10,8 @@
     <Folder Include="JSON\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\images\logo.png" />
+  </ItemGroup>
+
 </Project>
