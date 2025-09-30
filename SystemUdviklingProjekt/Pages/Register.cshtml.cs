@@ -41,6 +41,12 @@ namespace SystemUdviklingProjekt.Pages
         [BindProperty]
         public string Email { get; set; }
 
+        [BindProperty]
+        public int ZipCode { get; set; }
+
+        [BindProperty]
+        public string Description { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the user is an administrator.
         /// </summary>
@@ -158,7 +164,7 @@ namespace SystemUdviklingProjekt.Pages
                 members = JsonSerializer.Deserialize<List<Member>>(json) ?? new();
             }
 
-            var newMember = new Member(Name, Phone, Email, Username, selectedImage, isadministrator)
+            var newMember = new Member(Name, Phone, Email, Username, selectedImage, isadministrator, ZipCode, Description)
             {
                 ID = members.Count + 1
             };
@@ -168,7 +174,7 @@ namespace SystemUdviklingProjekt.Pages
                 JsonSerializer.Serialize(members, new JsonSerializerOptions { WriteIndented = true }));
 
             Message = "Bruger og medlem oprettet!";
-            return Page();
+            return RedirectToPage("/Forside");
         }
     }
 }

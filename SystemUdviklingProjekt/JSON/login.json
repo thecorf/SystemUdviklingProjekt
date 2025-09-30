@@ -2,11 +2,29 @@
   {
     "Username": "",
     "Password": "",
-    "Email": ""
+    "Email": "",
+    "Description": "",
+    "ZipCode": 2147483647
   },
   {
     "Username": "test",
     "Password": "",
-    "Email": ""
+    "Email": "",
+    "Description": "",
+    "ZipCode": 2147483647
+  },
+  {
+    "Username": "Christian",
+    "Password": "",
+    "Email": "",
+    "Description": "",
+    "ZipCode": 2147483647
+  },
+  {
+    "Username": "Markus",
+    "Password": "",
+    "Email": "",
+    "Description": "",
+    "ZipCode": 2147483647
   }
 ]

@@ -28,6 +28,10 @@ namespace SystemUdviklingProjekt.Pages
             /// </summary>
             public string ErrorMessage { get; set; }
 
+            public string Desription { get; set; }
+
+            public int ZipCode { get; set; }
+
             /// <summary>
             /// Gets or sets the success message to display when login succeeds.
             /// </summary>

@@ -6,6 +6,8 @@
     "Phone": null,
     "Email": null,
     "ProfileImage": null,
+    "ZipCode": 0,
+    "Description": null,
     "IsAdministrator": false
   },
   {
@@ -15,6 +17,30 @@
     "Phone": "69696969",
     "Email": "knaskellerknep@knep.com",
     "ProfileImage": "Avatar5.jpg",
+    "ZipCode": 0,
+    "Description": null,
+    "IsAdministrator": false
+  },
+  {
+    "ID": 3,
+    "Name": "Christian",
+    "Username": "Christian",
+    "Phone": "12121212",
+    "Email": "Hej@gmail.com",
+    "ProfileImage": "Avatar10.jpg",
+    "ZipCode": 1234,
+    "Description": "Jeg er tr\u00E6t af denne udannelse ",
+    "IsAdministrator": false
+  },
+  {
+    "ID": 4,
+    "Name": "Markus",
+    "Username": "Markus",
+    "Phone": "6969",
+    "Email": "markus@gmail.com",
+    "ProfileImage": "Avatar1.jpg",
+    "ZipCode": 6969,
+    "Description": "Jeg vil h\u00E6\u00E6p",
     "IsAdministrator": false
   }
 ]

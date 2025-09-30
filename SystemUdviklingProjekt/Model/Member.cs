@@ -32,6 +32,11 @@
         /// </summary>
         public string ProfileImage { get; set; }
 
+
+        public int ZipCode { get; set; }
+
+        public string Description { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the member is an administrator.
         /// </summary>
@@ -51,7 +56,9 @@
         /// <param name="username">The username of the member.</param>
         /// <param name="profileImage">The profile image URL or path of the member.</param>
         /// <param name="isadministrator">A value indicating whether the member is an administrator.</param>
-        public Member(string name, string phone, string email, string username, string profileImage, bool isadministrator)
+        /// <param name="description">A brief description of the member.</param>
+        /// <param name="zipCode">The zip code of the member.</param>
+        public Member(string name, string phone, string email, string username, string profileImage, bool isadministrator, int zipCode, string description)
         {
             Name = name;
             Phone = phone;
@@ -59,6 +66,8 @@
             Username = username;
             ProfileImage = profileImage;
             IsAdministrator = isadministrator;
+            ZipCode = zipCode;
+            Description = description;
         }
     }
 }
