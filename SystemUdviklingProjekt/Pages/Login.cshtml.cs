@@ -41,7 +41,7 @@ namespace SystemUdviklingProjekt.Pages
             /// <param name="env">The hosting environment to determine the file path for login data.</param>
             public LoginModel(IWebHostEnvironment env)
             {
-                loginFilePath = Path.Combine(env.ContentRootPath, "Data", "login.json");
+                loginFilePath = Path.Combine(env.ContentRootPath, "JSON", "login.json");
             }
 
             /// <summary>
