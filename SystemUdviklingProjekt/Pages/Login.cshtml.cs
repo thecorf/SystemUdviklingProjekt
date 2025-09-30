@@ -69,8 +69,8 @@ namespace SystemUdviklingProjekt.Pages
                 }
 
                 var user = users.FirstOrDefault(u =>
-                    u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase) &&
-                    u.PasswordHash == Password);
+                u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase));
+                    //u.PasswordHash == Password);
 
                 if (user == null)
                 {
@@ -81,8 +81,8 @@ namespace SystemUdviklingProjekt.Pages
                 // Store the username in the session
                 HttpContext.Session.SetString("Username", user.Username);
 
-                // Store the IsAdministrator value in the session
-                HttpContext.Session.SetString("IsAdministrator", user.IsAdministrator.ToString().ToLower());
+                //// Store the IsAdministrator value in the session
+                //HttpContext.Session.SetString("IsAdministrator", user.IsAdministrator.ToString().ToLower());
 
                 Message = "Login lykkedes!";
                 return RedirectToPage("/Forside");
@@ -95,7 +95,7 @@ namespace SystemUdviklingProjekt.Pages
             public IActionResult OnPostLogout()
             {
                 HttpContext.Session.Clear(); // Clear all session data
-                return RedirectToPage("/Index"); // Redirect to the login page
+                return RedirectToPage("/Forside"); // Redirect to the login page
             }
         }
     }

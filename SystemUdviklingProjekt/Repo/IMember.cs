@@ -24,4 +24,4 @@ namespace SystemUdviklingProjekt.Repo
             // public Member Get(int id);
         }
     }
-}
+

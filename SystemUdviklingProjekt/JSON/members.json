@@ -1,0 +1,20 @@
+[
+  {
+    "ID": 0,
+    "Name": null,
+    "Username": null,
+    "Phone": null,
+    "Email": null,
+    "ProfileImage": null,
+    "IsAdministrator": false
+  },
+  {
+    "ID": 2,
+    "Name": "test",
+    "Username": "test",
+    "Phone": "69696969",
+    "Email": "knaskellerknep@knep.com",
+    "ProfileImage": "Avatar5.jpg",
+    "IsAdministrator": false
+  }
+]
