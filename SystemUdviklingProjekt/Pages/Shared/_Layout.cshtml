@@ -13,19 +13,21 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HillerodSejlklub.styles.css" asp-append-version="true" />
-    <link href="~/css/Navbar.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="~/SystemUdviklingProjekt.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
 </head>
 <body>
+    <!-- SIDEBAR / NAVBAR -->
     <header>
         @if (ViewData["ShowNavbar"] == null || (bool)ViewData["ShowNavbar"])
         {
-            <nav class="navbar-container" id="sideBar">
+            <nav class="navbar-container" id="sideBar" role="navigation" aria-label="Sidebar navigation">
                 <ul>
                     <!-- Logo + toggle -->
                     <li>
                         <span class="logo">
-                            <h2>Bogsystem</h2>
+                            <h2>LibraryRent</h2>
                         </span>
                         <button onclick="toggleSidebar()" id="toggle-btn" aria-label="Toggle menu">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z" /></svg>
@@ -48,7 +50,7 @@
                         </a>
                     </li>
 
-                    @* Opret bog – kun hvis logget ind *@
+                    <!-- Opret bog (kun logget ind) -->
                     @if (isLoggedIn)
                     {
                         <li class="@(page() == "/Books/Create" ? "active" : "")">
@@ -59,7 +61,7 @@
                         </li>
                     }
 
-                    @* Min profil – kun hvis logget ind *@
+                    <!-- Min profil (kun logget ind) -->
                     @if (isLoggedIn)
                     {
                         <li class="@(page() == "/UserProfile" ? "active" : "")">
@@ -70,7 +72,7 @@
                         </li>
                     }
 
-                    @* Login, hvis ikke logget ind *@
+                    <!-- Login (vises når man IKKE er logget ind) -->
                     @if (!isLoggedIn)
                     {
                         <li class="@(page() == "/Login" ? "active" : "")">
@@ -81,12 +83,13 @@
                         </li>
                     }
 
-                    @* Logout + lille greeting – kun hvis logget ind *@
+                    <!-- Brugernavn + Logout (vises når man ER logget ind) -->
                     @if (isLoggedIn)
                     {
-                        <li>
+                        <li class="mt-auto">
                             <div class="navbar-text mb-2">
-                                <strong style="color:#ffd54f">@username</strong>
+                                Hej, <strong style="color:#ffd54f">@username</strong>
+                            </div>
                             <form method="post" id="LogoutBtn" asp-page="/Login" asp-page-handler="Logout">
                                 <button type="submit" class="btn btn-danger w-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
@@ -100,10 +103,13 @@
         }
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <!-- VARM BAGGRUND + PAPIR-OVERFLADE TIL INDHOLD -->
+    <div class="app-bg">
+        <div class="container content-offset py-4">
+            <main role="main" class="page-surface">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

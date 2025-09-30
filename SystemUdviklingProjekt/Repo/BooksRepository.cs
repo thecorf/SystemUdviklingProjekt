@@ -52,6 +52,8 @@ public class BooksRepository
         list.Add(book);
         Write(list);
     }
+    public BookModel? GetById(Guid id) => Read().FirstOrDefault(b => b.Id == id);
+
 
     public bool Rent(Guid id, string username)
     {
@@ -65,19 +67,17 @@ public class BooksRepository
         return true;
     }
 
-    public int UpdateBooks(List<BookModel> books)
+    public bool Update(BookModel updated)
     {
-        var list = Read();
-        foreach (var book in list)
-        {
-            if (book.NumberOfBooks.HasValue && book.NumberOfBooks > 0)
-            {
-                book.NumberOfBooks--;
-            }
-        }
-        Write(list);
-        return list.Count;
+        var list = Read();                                
+        var i = list.FindIndex(b => b.Id == updated.Id);  
+        if (i < 0) return false;
+
+        list[i] = updated;                                
+        Write(list);                                     
+        return true;
     }
+
 
     public bool Return(Guid id, string username)
     {
@@ -95,10 +95,50 @@ public class BooksRepository
         return true;
     }
 
+    public void EditBook(List<BookModel> books) 
+    { 
+        var list = Read();
+        foreach (var book in books)
+        {
+            var existingBook = list.FirstOrDefault(b => b.Id == book.Id);
+            if (existingBook != null)
+            {
+                existingBook.Title = book.Title;
+                existingBook.Author = book.Author;
+                existingBook.Description = book.Description;
+                existingBook.ImageUrl = book.ImageUrl;
+                existingBook.NumberOfBooks = book.NumberOfBooks;
+                existingBook.Genre = book.Genre;
+                existingBook.Year = book.Year;
+                existingBook.ImagePath = book.ImagePath;
+            }
+        }
+        Write(list);
+    }
+
+
+
+    public string DeleteBook(Guid id)
+    {
+        var list = Read();
+        var bookToRemove = list.FirstOrDefault(b => b.Id == id);
+        if (bookToRemove != null)
+        {
+            list.Remove(bookToRemove);
+            Write(list);
+            return "Bogen er slettet.";
+        }
+        return "Kunne ikke slette bogen.";
+    }
 
 
 
 
 
-}
+
+
+
+
+
+    }
 

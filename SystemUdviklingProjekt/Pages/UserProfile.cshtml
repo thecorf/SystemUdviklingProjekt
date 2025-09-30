@@ -49,9 +49,56 @@ else
                 </form>
             </li>
         }
+
     </ul>
 }
 
+<h3 class="mt-4"> Fjern en bog</h3>
+@if (!Model.Owned.Any())
+{
+    <p>Du har ikke oprettet nogen bøger endnu.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var b in Model.Owned)
+        {
+            <li class="list-group
+-item d-flex align-items-center">
+                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
+                     style="height:48px;width:auto;margin-right:12px" />
+                <div class="flex-fill">
+                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
+                </div>
+                <form method="post" asp-page-handler="Delete" class="m-0">
+                    <input type="hidden" name="id" value="@b.Id" />
+                    <button class="btn btn-outline-danger btn-sm">Fjern bog</button>
+                </form>
+            </li>
+    }
+    </ul>
+}
 
-            
+<h3 class="mt-4">Rediger en bog</h3>
+@if (!Model.Owned.Any())
+{
+    <p>Du har ikke oprettet nogen bøger endnu.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var b in Model.Owned)
+        {
+            <li class="list-group
+-item d-flex align-items-center">
+                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
+                     style="height:48px;width:auto;margin-right:12px" />
+                <div class="flex-fill">
+                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
+                </div>
+                <a class="btn btn-outline-primary btn-sm" asp-page="/Books/EditBook" asp-route-id="@b.Id">Rediger bog</a>
+            </li>
+    }
+    </ul>
+}
 

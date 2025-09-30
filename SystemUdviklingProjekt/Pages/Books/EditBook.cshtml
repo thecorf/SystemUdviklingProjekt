@@ -1,0 +1,62 @@
+﻿@page "/Books/EditBook/{id:guid}"
+@model SystemUdviklingProjekt.Pages.Books.EditBookModel
+@{
+    ViewData["Title"] = "Rediger bog";
+}
+
+<h1>Rediger bog</h1>
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Input.Title" class=" form-label
+
+"></label>
+
+        <input asp-for="Input.Title" class="form-control" />
+        <span asp-validation-for="Input.Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Author" class="form-label"></label>
+        <input asp-for="Input.Author" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Year" class="form-label"></label>
+        <input asp-for="Input.Year" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Genre" class=" form-label
+
+"></label>
+
+        <input asp-for="Input.Genre" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.NumberOfBooks" class=" form-label
+
+"></label>
+
+        <input asp-for="Input.NumberOfBooks" class="form-control" type="number" min="1" />
+        <span asp-validation-for="Input.NumberOfBooks" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Description" class=" form-label
+
+"></label>
+
+        <textarea asp-for="Input.Description" class="form-control"></textarea>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.ImageFile" class=" form-label
+
+"></label>
+
+        <input asp-for="Input.ImageFile" class="form-control" type="file" accept="image/*" />
+        <div class="form-text">Valgfrit – upload et billede af bogen.</div>
+        <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Gem ændringer</button>
+    <a asp-page="/AvailableBooks" class="btn btn-secondary">Annullér</a>
+
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

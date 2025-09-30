@@ -26,17 +26,24 @@ namespace SystemUdviklingProjekt.Pages
         /// <summary>
         /// Gets or sets the error message to display when login fails.
         /// </summary>
+        [BindProperty]
         public string ErrorMessage { get; set; }
 
+        [BindProperty]
         public string Desription { get; set; }
 
+        [BindProperty]
         public int ZipCode { get; set; }
 
         /// <summary>
         /// Gets or sets the success message to display when login succeeds.
         /// </summary>
+        /// 
+        [BindProperty]
+
         public string Message { get; set; }
 
+       
         private readonly string loginFilePath;
 
         /// <summary>
@@ -81,11 +88,12 @@ namespace SystemUdviklingProjekt.Pages
             u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase));
             //u.PasswordHash == Password);
 
-            if (user == null)
+            if (user == null || user.Password != Password)
             {
-                ErrorMessage = "Forkert brugernavn eller adgangskode.";
+                ErrorMessage = "Ugyldigt brugernavn eller adgangskode.";
                 return Page();
             }
+
 
             // Store the username in the session
             HttpContext.Session.SetString("Username", user.Username);

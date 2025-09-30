@@ -35,11 +35,20 @@ namespace SystemUdviklingProjekt.Pages
         }
         public void UpdateNumberOfBooksAfterRent() // Call this method after a book is rented
         {
-            if (Books.Count > 0)
-                foreach (var book in Books)
-                    if (book.NumberOfBooks.HasValue && book.NumberOfBooks > 0)
-                        book.NumberOfBooks--;
-            _repo.UpdateBooks(Books);
+            var books = _repo.GetAll();
+            foreach (var book in books)
+            {
+                if (book.NumberOfBooks > 0)
+                {
+                    book.NumberOfBooks--;
+                }
+            }
+            // Save the updated book list back to the repository
+            foreach (var book in books)
+            {
+                _repo.Update(book); // Assuming Add method updates if the book already exists
+            }
+
         }
     }
 

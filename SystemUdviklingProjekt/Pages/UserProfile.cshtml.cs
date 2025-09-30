@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SystemUdviklingProjekt.Model;
+using SystemUdviklingProjekt.Service;
+using SystemUdviklingProjekt.Repo;
 
 namespace SystemUdviklingProjekt.Pages
 {
@@ -33,5 +35,32 @@ namespace SystemUdviklingProjekt.Pages
             TempData["Message"] = ok ? "Bogen er afleveret." : "Kunne ikke aflevere bogen.";
             return RedirectToPage(); // reload profilen
         }
+
+        public IActionResult OnPostDelete(Guid id)
+        {
+            var username = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrEmpty(username))
+                return RedirectToPage("/Login", new { returnUrl = Url.Page("/UserProfile") });
+            var ok = _repo.DeleteBook(id);
+            TempData["Message"] = ok == "OK" ? "Bogen er slettet." : ok;
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostEditBooks()
+        {
+            return RedirectToPage("/Books/ManageBooks");
+        }
+
+
+
+        public IActionResult OnPostEdit(Guid id)
+        {
+            var username = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrEmpty(username))
+            return RedirectToPage("/Login", new { returnUrl = Url.Page("/UserProfile") });
+            return RedirectToPage("/Books/Edit", new { id = id });
+
+        }
+
     }
 }
