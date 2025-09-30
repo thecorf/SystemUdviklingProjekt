@@ -1,0 +1,13 @@
+[
+  {
+    "Id": "af0a4e63-448b-498d-84bc-ebcc894d5b21",
+    "Title": "Den sorte Gris",
+    "Author": "Scrum Master",
+    "Description": "Dette er en bog ",
+    "ImageUrl": "https://www.bevaringscenter-oregaard.dk/wp-content/uploads/2021/01/sortbroget2-1024x576.jpg",
+    "CreatedBy": "test",
+    "RentedBy": "test",
+    "CreatedAt": "2025-09-30T10:45:04.7529718Z",
+    "IsAvailable": false
+  }
+]

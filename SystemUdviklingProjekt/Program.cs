@@ -22,6 +22,8 @@ namespace SystemUdviklingProjekt
             builder.Services.AddRazorPages();
             builder.Services.AddSession();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSingleton<BooksRepository>();
+           
 
 
             var app = builder.Build();
