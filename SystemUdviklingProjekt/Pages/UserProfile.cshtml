@@ -1,4 +1,57 @@
-﻿@page
-@model SystemUdviklingProjekt.Pages.UserProfileModel
+﻿@page "/UserProfile"
+@model UserProfileModel
 @{
+    ViewData["Title"] = "Min profil";
 }
+
+<h1 class="mb-4">Min profil</h1>
+
+<h3 class="mt-3">Bøger jeg har oprettet</h3>
+@if (!Model.Owned.Any())
+{
+    <p>Du har ikke oprettet nogen bøger endnu.</p>
+}
+else
+{
+    <ul class="list-group mb-4">
+        @foreach (var b in Model.Owned)
+        {
+            <li class="list-group-item d-flex align-items-center">
+                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt="" style="height:48px;width:auto;margin-right:12px" />
+                <div class="flex-fill">
+                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
+                    <div><small>Ledige: @b.AvailableCopies / @b.NumberOfBooks</small></div>
+                </div>
+            </li>
+        }
+    </ul>
+}
+
+<h3 class="mt-4">Bøger jeg har lejet</h3>
+@if (!Model.Rented.Any())
+{
+    <p>Du har ikke lejet nogen bøger.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var b in Model.Rented)
+        {
+            <li class="list-group-item d-flex align-items-center">
+                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
+                     style="height:48px;width:auto;margin-right:12px" />
+                <div class="flex-fill">
+                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
+                </div>
+                <form method="post" asp-page-handler="Return" class="m-0">
+                    <input type="hidden" name="id" value="@b.Id" />
+                    <button class="btn btn-outline-danger btn-sm">Stop leje</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+
+
+            
+

@@ -1,13 +1,40 @@
 [
   {
-    "Id": "af0a4e63-448b-498d-84bc-ebcc894d5b21",
-    "Title": "Den sorte Gris",
-    "Author": "Scrum Master",
-    "Description": "Dette er en bog ",
-    "ImageUrl": "https://www.bevaringscenter-oregaard.dk/wp-content/uploads/2021/01/sortbroget2-1024x576.jpg",
+    "Id": "101c2904-be71-4472-9ded-36d1d7dbf6cc",
+    "Title": "Vejen til Datamatiker",
+    "Author": "The One And Only",
+    "Year": 2025,
+    "Genre": "Fun",
+    "Description": "weffewww",
+    "ImageUrl": null,
+    "ImagePath": "/images/book-placeholder.png",
+    "NumberOfBooks": 10,
     "CreatedBy": "test",
-    "RentedBy": "test",
-    "CreatedAt": "2025-09-30T10:45:04.7529718Z",
-    "IsAvailable": false
+    "RentedBy": null,
+    "CreatedAt": "2025-09-30T12:45:05.7896727Z",
+    "RentedByUsers": [
+      "test"
+    ],
+    "AvailableCopies": 9,
+    "IsAvailable": true
+  },
+  {
+    "Id": "1a5e31a8-7ce4-4557-9ee8-0d266de605bc",
+    "Title": "GIZ Databaser",
+    "Author": "Markus",
+    "Year": 2025,
+    "Genre": "Giz",
+    "Description": "Vejen til den smukkeste Giz Databse",
+    "ImageUrl": null,
+    "ImagePath": "/uploads/books/9b29b15a-0ea9-41a5-b5a9-a1d38cc0e46e.png",
+    "NumberOfBooks": 10,
+    "CreatedBy": "Markus",
+    "RentedBy": null,
+    "CreatedAt": "2025-09-30T13:05:16.5618494Z",
+    "RentedByUsers": [
+      "Markus"
+    ],
+    "AvailableCopies": 9,
+    "IsAvailable": true
   }
 ]

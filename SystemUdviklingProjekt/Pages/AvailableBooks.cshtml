@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/AvailableBooks"
 @model SystemUdviklingProjekt.Pages.AvailableBooksModel
 @{
     ViewData["Title"] = "Ledige bøger";
@@ -13,7 +13,16 @@
             <div class="alert alert-info mb-0">@msg</div>
         }
     </div>
-    <a class="btn btn-primary" asp-page="/Books/Create">Opret bog</a>
+
+    @if (Model.IsLoggedIn)
+    {
+        <a class="btn btn-primary" asp-page="/Books/Create">Opret bog</a>
+    }
+    else
+    {
+        <a class="btn btn-outline-secondary disabled" aria-disabled="true">Log ind for at oprette</a>
+        <a class="btn btn-link" asp-page="/Login" asp-route-returnUrl="/AvailableBooks">Log ind</a>
+    }
 </div>
 
 @if (!Model.Books.Any(b => b.IsAvailable))
@@ -22,39 +31,62 @@
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-3 g-3">
-    @foreach (var b in Model.Books.Where(x => x.IsAvailable))
-    {
-        <div class="col">
-            <div class="card h-100">
-                @if (!string.IsNullOrWhiteSpace(b.ImageUrl))
-                {
-                    <img class="card-img-top" src="@b.ImageUrl" alt="@b.Title" />
-                }
-                <div class="card-body">
-                    <h5 class="card-title">@b.Title</h5>
-                    <p class="card-text"><em>@b.Author</em></p>
-                    @if (!string.IsNullOrWhiteSpace(b.Description))
-                    {
-                        <p class="card-text">@b.Description</p>
-                    }
-                </div>
-                <div class="card-footer bg-white">
-                    @if (Model.IsLoggedIn)
-                    {
-                        <form method="post" asp-page-handler="Rent" class="d-inline">
-                            <input type="hidden" name="id" value="@b.Id" />
-                            <button class="btn btn-success">Lej</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <a class="btn btn-outline-secondary disabled" aria-disabled="true">Log ind for at leje</a>
-                        <a class="btn btn-link" asp-page="/Login">Log ind</a>
-                    }
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var b in Model.Books.Where(x => x.IsAvailable))
+        {
+            var img = string.IsNullOrWhiteSpace(b.ImagePath)
+            ? "/images/book-placeholder.png"
+            : b.ImagePath;   // hvis du stadig bruger ImageUrl, byt til b.ImageUrl
+
+            <div class="col">
+                <div class="card h-100 shadow-sm book-card">
+                    <div class="ratio ratio-3x4">
+                        <img src="@img" alt="@b.Title" class="rounded-top" />
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title book-title mb-1">@b.Title</h5>
+                        <div class="text-muted mb-2">
+                            <em>@b.Author</em>
+                            @if (b.Year is not null)
+                            {
+                                <span> · @b.Year</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(b.Genre))
+                            {
+                                <span> · @b.Genre</span>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(b.Description))
+                        {
+                            <p class="card-text book-desc flex-grow-1">@b.Description</p>
+                        }
+                        else
+                        {
+                            <div class="flex-grow-1"></div>
+                        }
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="badge bg-secondary">
+                                Ledige: @b.AvailableCopies / @b.NumberOfBooks
+                            </span>
+
+                            @if (Model.IsLoggedIn)
+                            {
+                                <form method="post" asp-page-handler="Rent" class="m-0">
+                                    <input type="hidden" name="id" value="@b.Id" />
+                                    <button class="btn btn-success btn-sm">Lej</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">Log ind for at leje</a>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
     </div>
 }

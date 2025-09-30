@@ -1,67 +1,114 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var username = Context.Session.GetString("Username");
+    var isLoggedIn = !string.IsNullOrEmpty(username);
+    string page() => ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SystemUdviklingProjekt</title>
+    <title>@ViewData["Title"] - Bogsystem</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SystemUdviklingProjekt.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/HillerodSejlklub.styles.css" asp-append-version="true" />
+    <link href="~/css/Navbar.css" rel="stylesheet" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Forside">Forside</a>
-                    <img src="~/images/logo.png" alt="SystemUdviklingProjekt logo" style="height:50px; width:auto;" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
+        @if (ViewData["ShowNavbar"] == null || (bool)ViewData["ShowNavbar"])
+        {
+            <nav class="navbar-container" id="sideBar">
+                <ul>
+                    <!-- Logo + toggle -->
+                    <li>
+                        <span class="logo">
+                            <h2>Bogsystem</h2>
+                        </span>
+                        <button onclick="toggleSidebar()" id="toggle-btn" aria-label="Toggle menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z" /></svg>
+                        </button>
+                    </li>
+
+                    <!-- Forside -->
+                    <li class="@(page() == "/Forside" ? "active" : "")">
+                        <a asp-page="/Forside">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Z" /></svg>
+                            <span>Forside</span>
+                        </a>
+                    </li>
+
+                    <!-- Ledige bøger -->
+                    <li class="@(page() == "/AvailableBooks" ? "active" : "")">
+                        <a asp-page="/AvailableBooks">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M300-80q-58 0-99-41t-41-99v-520q0-58 41-99t99-41h500v600H300Z" /></svg>
+                            <span>Ledige bøger</span>
+                        </a>
+                    </li>
+
+                    @* Opret bog – kun hvis logget ind *@
+                    @if (isLoggedIn)
+                    {
+                        <li class="@(page() == "/Books/Create" ? "active" : "")">
+                            <a asp-page="/Books/Create">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" /></svg>
+                                <span>Opret bog</span>
+                            </a>
                         </li>
+                    }
+
+                    @* Min profil – kun hvis logget ind *@
+                    @if (isLoggedIn)
+                    {
+                        <li class="@(page() == "/UserProfile" ? "active" : "")">
+                            <a asp-page="/UserProfile">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-520q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0 80q92 0 170.5 44T780-280v80H180v-80q49-72 127.5-116T480-440Z" /></svg>
+                                <span>Min profil</span>
+                            </a>
+                        </li>
+                    }
+
+                    @* Login, hvis ikke logget ind *@
+                    @if (!isLoggedIn)
+                    {
+                        <li class="@(page() == "/Login" ? "active" : "")">
+                            <a asp-page="/Login" asp-route-returnUrl="@Context.Request.Path">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M520-120v-80h240v-560H520v-80h240q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H520Zm-80-160-56-56 104-104H120v-80h368L384-624l56-56 200 200-200 200Z" /></svg>
+                                <span>Log ind</span>
+                            </a>
+                        </li>
+                    }
+
+                    @* Logout + lille greeting – kun hvis logget ind *@
+                    @if (isLoggedIn)
+                    {
                         <li>
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserProfile">Profile</a>
+                            <div class="navbar-text mb-2">
+                                <strong style="color:#ffd54f">@username</strong>
+                            <form method="post" id="LogoutBtn" asp-page="/Login" asp-page-handler="Logout">
+                                <button type="submit" class="btn btn-danger w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" /></svg>
+                                    <span>Log ud</span>
+                                </button>
+                            </form>
                         </li>
-                        <li>
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Members">Members</a>
-                        </li>
-                        <li>
-                            <a class="nav-link text-dark" asp-area="" asp-page="/ManageCollection">Manage</a>
-                        </li>
-                        <li>
-                            <a class="nav-link text-dark" asp-area="" asp-page="/AvailableBooks">Available Books</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/AvailableBooks">Available Books</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                    }
+                </ul>
+            </nav>
+        }
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - SystemUdviklingProjekt - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script src="~/js/navbar.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

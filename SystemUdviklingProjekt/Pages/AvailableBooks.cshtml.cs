@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SystemUdviklingProjekt.Model;
+using SystemUdviklingProjekt.Service;
+using SystemUdviklingProjekt.Repo;
 
 namespace SystemUdviklingProjekt.Pages
 {
@@ -17,6 +19,9 @@ namespace SystemUdviklingProjekt.Pages
 
         public void OnGet() => Books = _repo.GetAll();
 
+      
+
+
         public IActionResult OnPostRent(Guid id)
         {
             var username = HttpContext.Session.GetString("Username");
@@ -26,6 +31,15 @@ namespace SystemUdviklingProjekt.Pages
             var ok = _repo.Rent(id, username);
             TempData["Message"] = ok ? "Bogen er nu lejet." : "Bogen er ikke ledig.";
             return RedirectToPage();
+
+        }
+        public void UpdateNumberOfBooksAfterRent() // Call this method after a book is rented
+        {
+            if (Books.Count > 0)
+                foreach (var book in Books)
+                    if (book.NumberOfBooks.HasValue && book.NumberOfBooks > 0)
+                        book.NumberOfBooks--;
+            _repo.UpdateBooks(Books);
         }
     }
 
