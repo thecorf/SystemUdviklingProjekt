@@ -44,6 +44,28 @@
     <a asp-page="/AvailableBooks" class="btn btn-secondary">Annullér</a>
 </form>
 
+
+
+<form method="post" enctype="multipart/form-data">  
+  
+
+    <div class="mb-3">
+        <label asp-for="Input.ImageFile" class="form-label">Cover (valgfri)</label>
+        <input asp-for="Input.ImageFile" class="form-control" accept="image/*" />
+        <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.PdfFile" class="form-label">PDF (valgfri)</label>
+        <input asp-for="Input.PdfFile" class="form-control" accept="application/pdf" />
+        <span asp-validation-for="Input.PdfFile" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gem</button>
+</form>
+
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

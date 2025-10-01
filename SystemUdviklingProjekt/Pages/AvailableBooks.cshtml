@@ -6,6 +6,44 @@
 
 <h1 class="mb-3">Ledige bøger</h1>
 
+<!-- FILTERBAR (GET-form) -->
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-sm-3">
+        <label asp-for="Title" class="form-label">Titel</label>
+        <input asp-for="Title" class="form-control" placeholder="Fx 'Ringenes Herre'" />
+    </div>
+
+    <div class="col-12 col-sm-3">
+        <label asp-for="Author" class="form-label">Forfatter</label>
+        <input asp-for="Author" class="form-control" placeholder="Fx 'Nesbø'" />
+    </div>
+
+    <div class="col-12 col-sm-3">
+        <label asp-for="Genre" class="form-label">Genre</label>
+        <select asp-for="Genre" class="form-select">
+            <option value="">Alle genrer</option>
+            @foreach (var g in Model.Genres)
+            {
+                <option value="@g">@g</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-6 col-sm-2">
+        <label asp-for="Year" class="form-label">År</label>
+        <input asp-for="Year" class="form-control" type="number" min="0" />
+    </div>
+
+    <div class="col-6 col-sm-1 d-grid">
+        <button type="submit" class="btn btn-primary">Filtrér</button>
+    </div>
+
+    <div class="col-6 col-sm-2 d-grid">
+        <a asp-page="/AvailableBooks" class="btn btn-outline-secondary">Ryd</a>
+    </div>
+</form>
+
+<!-- Opret / login -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         @if (TempData["Message"] is string msg)
@@ -25,27 +63,36 @@
     }
 </div>
 
-@if (!Model.Books.Any(b => b.IsAvailable))
+@if (!Model.Books.Any())
 {
-    <p>Ingen ledige bøger lige nu.</p>
+    <p>Ingen bøger matcher dit filter.</p>
 }
 else
 {
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach (var b in Model.Books.Where(x => x.IsAvailable))
+        @foreach (var b in Model.Books)
         {
-            var img = string.IsNullOrWhiteSpace(b.ImagePath)
-            ? "/images/book-placeholder.png"
-            : b.ImagePath;   // hvis du stadig bruger ImageUrl, byt til b.ImageUrl
+            var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
 
             <div class="col">
-                <div class="card h-100 shadow-sm book-card">
+                <div class="card h-100 shadow-sm book-card position-relative">
                     <div class="ratio ratio-3x4">
                         <img src="@img" alt="@b.Title" class="rounded-top" />
                     </div>
 
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title book-title mb-1">@b.Title</h5>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title book-title mb-1 me-2">@b.Title</h5>
+
+                            @* Gennemsnitsvurdering på kortet *@
+                            @if (b.Ratings != null && b.Ratings.Count > 0)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    ⭐ @b.AverageRating (@b.Ratings.Count)
+                                </span>
+                            }
+                        </div>
+
                         <div class="text-muted mb-2">
                             <em>@b.Author</em>
                             @if (b.Year is not null)
@@ -76,14 +123,21 @@ else
                             {
                                 <form method="post" asp-page-handler="Rent" class="m-0">
                                     <input type="hidden" name="id" value="@b.Id" />
-                                    <button class="btn btn-success btn-sm">Lej</button>
+                                    <button class="btn btn-success btn-sm" type="submit" @(b.AvailableCopies == 0 ? "disabled" : null)>
+                                        Lej
+                                    </button>
                                 </form>
                             }
                             else
                             {
-                                <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">Log ind for at leje</a>
+                                <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">
+                                    Log ind for at leje
+                                </a>
                             }
                         </div>
+
+                        
+                        <a class="stretched-link" asp-page="/Books/Details" asp-route-id="@b.Id"></a>
                     </div>
                 </div>
             </div>

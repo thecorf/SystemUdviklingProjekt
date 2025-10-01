@@ -1,45 +1,54 @@
-﻿@page
-@model SystemUdviklingProjekt.Pages.LoginModel
-@{
-	
-}
-@{
-    ViewData["Title"] = "Login";
-    ViewData["ShowNavbar"] = false;
-}
+﻿    @page
+    @model SystemUdviklingProjekt.Pages.LoginModel
+    @{
+        // Set the page title and hide the navigation bar for the login page.
+        ViewData["Title"] = "Login";
+        ViewData["ShowNavbar"] = false;
+    }
 
+    <!--
+        Login Page
+        - Displays a login form for users to enter their username/email and password.
+        - Provides links for password recovery and user registration.
+        - Shows error or success messages based on login attempt.
+    -->
 
-<div class="wrapper">
-    <div class="login-container">
-        <h2 class="login-title">Login for at fortsætte</h2>
-        <form method="post" class="login-form">
-            <div class="form-group">
-                <label asp-for="Username" class="form-label">USERNAME OR EMAIL</label>
-                <input asp-for="Username" class="form-input" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="form-label">PASSWORD</label>
-                <input asp-for="Password" type="password" class="form-input" />
-            </div>
-            <button type="submit" class="login-button">Login</button>
-            <div class="forgot-password">
-                <a asp-page="/ForgotPassword">FORGOT PASSWORD?</a>
-            </div>
-            <div class="register-link">
-                <a asp-page="/Register" class="btn btn-secondary">Opret bruger</a>
-            </div>
-        </form>
+    <div class="wrapper">
+        <div class="login-container">
+            <h2 class="login-title">Login for at fortsætte</h2>
+            <form method="post" class="login-form">
+                <div class="form-group">
+                    <!-- Username or Email input field -->
+                    <label asp-for="Username" class="form-label">USERNAME OR EMAIL</label>
+                    <input asp-for="Username" class="form-input" />
+                </div>
+                <div class="form-group">
+                    <!-- Password input field -->
+                    <label asp-for="Password" class="form-label">PASSWORD</label>
+                    <input asp-for="Password" type="password" class="form-input" />
+                </div>
+                <!-- Submit button for login -->
+                <button type="submit" class="login-button">Login</button>
+                <div class="forgot-password">
+                    <!-- Link to password recovery page -->
+                    <a asp-page="/ForgotPassword">FORGOT PASSWORD?</a>
+                </div>
+                <div class="register-link">
+                    <!-- Link to user registration page -->
+                    <a asp-page="/Register" class="btn btn-secondary">Opret bruger</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
+    <!-- Display error message if login fails -->
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <p style="color:red">@Model.ErrorMessage</p>
+    }
 
-
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <p style="color:red">@Model.ErrorMessage</p>
-}
-
-@if (!string.IsNullOrEmpty(Model.Message))
-{
-    <p style="color:green">@Model.Message</p>
-}
+    <!-- Display success message if login succeeds -->
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <p style="color:green">@Model.Message</p>
+    }

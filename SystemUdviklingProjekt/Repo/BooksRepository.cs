@@ -130,15 +130,5 @@ public class BooksRepository
         }
         return "Kunne ikke slette bogen.";
     }
-
-
-
-
-
-
-
-
-
-
-    }
+}
 

@@ -1,59 +1,58 @@
 ﻿@page
 @model SystemUdviklingProjekt.Pages.RegisterModel
 @{
-}
-@{
-    ViewData["Title"] = "Opret Bruger";
+    ViewData["Title"] = "Opret bruger";
     ViewData["ShowNavbar"] = false;
 }
 
+<h2 class="mb-3">Opret bruger</h2>
 
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-warning">@Model.Message</div>
+}
 
-
-<div class="wrapper">
-    <div class="login-container">
-        <h2 class="login-title">Opret profil</h2>
-
-        <form method="post" class="login-form">
-            <div class="form-group">
-                <label class="form-label">Brugernavn</label>
-                <input asp-for="Username" class="form-input" required />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Adgangskode</label>
-                <input asp-for="Password" type="password" class="form-input" required />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Navn</label>
-                <input asp-for="Name" class="form-input" required />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Telefon</label>
-                <input asp-for="Phone" class="form-input" required />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input asp-for="Email" type="email" class="form-input" required />
-            </div>
-            <div class="form-group">
-                <label class="form-label">ZipCode</label>
-                <input asp-for="ZipCode" type="ZipCode" class="form-input" required />
-            </div>
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <input asp-for="Description" type="Description" class="form-input" required />
-            </div>
-
-            <button type="submit" class="login-button">Opret profil</button>
-
-            @if (!string.IsNullOrEmpty(Model.Message))
-            {
-                <p style="margin-top: 15px; color: green;">@Model.Message</p>
-            }
-        </form>
+<form method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Username" class="form-label">Brugernavn</label>
+        <input asp-for="Username" class="form-control" />
     </div>
-</div>
+    <div class="col-md-6">
+        <label asp-for="Password" class="form-label">Adgangskode</label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Name" class="form-label">Navn</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Phone" class="form-label">Telefon</label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="email" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="ZipCode" class="form-label">Postnummer</label>
+        <input asp-for="ZipCode" type="number" min="0" class="form-control" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <div class="form-check">
+            <input asp-for="isadministrator" class="form-check-input" type="checkbox" id="isadmin" />
+            <label class="form-check-label" for="isadmin">Administrator</label>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Description" class="form-label">Beskrivelse</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Opret</button>
+        <a asp-page="/Login" class="btn btn-link">Allerede bruger? Log ind</a>
+    </div>
+</form>

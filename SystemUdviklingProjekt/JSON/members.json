@@ -42,5 +42,27 @@
     "ZipCode": 6969,
     "Description": "Jeg vil h\u00E6\u00E6p",
     "IsAdministrator": false
+  },
+  {
+    "ID": 5,
+    "Name": "Anonym",
+    "Username": "TheLazyReader",
+    "Phone": "65856585",
+    "Email": "LAZY@gmail.com",
+    "ProfileImage": "Avatar3.jpg",
+    "ZipCode": 6969,
+    "Description": "Hejsa",
+    "IsAdministrator": false
+  },
+  {
+    "ID": 6,
+    "Name": "Nerdy",
+    "Username": "NerdAlert",
+    "Phone": "33333333",
+    "Email": "NerdAlert@gmail.com",
+    "ProfileImage": "Avatar8.jpg",
+    "ZipCode": 4584,
+    "Description": "Jeg elsker alt der har med viden at g\u00F8re",
+    "IsAdministrator": false
   }
 ]

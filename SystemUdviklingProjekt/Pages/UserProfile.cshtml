@@ -1,13 +1,22 @@
 ﻿@page "/UserProfile"
-@model UserProfileModel
+@model SystemUdviklingProjekt.Pages.UserProfileModel
 @{
     ViewData["Title"] = "Min profil";
 }
 
 <h1 class="mb-4">Min profil</h1>
 
-<h3 class="mt-3">Bøger jeg har oprettet</h3>
-@if (!Model.Owned.Any())
+@if (TempData["Message"] is string msg)
+{
+    <div class="alert alert-info">@msg</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Bøger jeg har oprettet</h3>
+    <a class="btn btn-sm btn-primary" asp-page="/Books/Create">Opret bog</a>
+</div>
+
+@if (!(Model.Owned?.Any() ?? false))
 {
     <p>Du har ikke oprettet nogen bøger endnu.</p>
 }
@@ -16,11 +25,38 @@ else
     <ul class="list-group mb-4">
         @foreach (var b in Model.Owned)
         {
+            var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
+
             <li class="list-group-item d-flex align-items-center">
-                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt="" style="height:48px;width:auto;margin-right:12px" />
+                <img src="@img" alt="" style="height:48px;width:auto;margin-right:12px" class="rounded" />
                 <div class="flex-fill">
-                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
-                    <div><small>Ledige: @b.AvailableCopies / @b.NumberOfBooks</small></div>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>@b.Title</strong>
+                            @if (!string.IsNullOrWhiteSpace(b.Author))
+                            {
+                                <small class="text-muted"> — @b.Author</small>
+                            }
+                            <div class="small text-muted">
+                                Ledige: @b.AvailableCopies / @b.NumberOfBooks
+                                @if ((b.Ratings?.Count ?? 0) > 0)
+                                {
+                                    <span class="badge bg-warning text-dark ms-2">⭐ @b.AverageRating (@b.Ratings.Count)</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-outline-primary" asp-page="/Books/Details" asp-route-id="@b.Id">Detaljer</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="/Books/EditBook" asp-route-id="@b.Id">Redigér</a>
+                            <form method="post" asp-page-handler="Delete" class="m-0">
+                                <input type="hidden" name="id" value="@b.Id" />
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Fjern \" @b.Title\"? Denne handling kan ikke fortrydes.');">
+                                    Fjern
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </li>
         }
@@ -28,7 +64,8 @@ else
 }
 
 <h3 class="mt-4">Bøger jeg har lejet</h3>
-@if (!Model.Rented.Any())
+
+@if (!(Model.Rented?.Any() ?? false))
 {
     <p>Du har ikke lejet nogen bøger.</p>
 }
@@ -37,68 +74,41 @@ else
     <ul class="list-group">
         @foreach (var b in Model.Rented)
         {
+            var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
+
             <li class="list-group-item d-flex align-items-center">
-                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
-                     style="height:48px;width:auto;margin-right:12px" />
+                <img src="@img" alt="" style="height:48px;width:auto;margin-right:12px" class="rounded" />
                 <div class="flex-fill">
-                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
+                    <strong>@b.Title</strong>
+                    @if (!string.IsNullOrWhiteSpace(b.Author))
+                    {
+                        <small class="text-muted"> — @b.Author</small>
+                    }
+                    @if ((b.Ratings?.Count ?? 0) > 0)
+                    {
+                        <span class="badge bg-warning text-dark ms-2">⭐ @b.AverageRating (@b.Ratings.Count)</span>
+                    }
                 </div>
-                <form method="post" asp-page-handler="Return" class="m-0">
-                    <input type="hidden" name="id" value="@b.Id" />
-                    <button class="btn btn-outline-danger btn-sm">Stop leje</button>
-                </form>
+
+                <div class="d-flex gap-2">
+                    @* Download PDF hvis tilknyttet *@
+                    @if (!string.IsNullOrEmpty(b.PdfPath))
+                    {
+                        <a class="btn btn-sm btn-primary"
+                           asp-page="/Books/Details"
+                           asp-page-handler="Download"
+                           asp-route-id="@b.Id">
+                            Download PDF
+                        </a>
+                    }
+
+                    @* Stop leje *@
+                    <form method="post" asp-page-handler="Return" class="m-0">
+                        <input type="hidden" name="id" value="@b.Id" />
+                        <button class="btn btn-sm btn-outline-danger">Stop leje</button>
+                    </form>
+                </div>
             </li>
         }
-
     </ul>
 }
-
-<h3 class="mt-4"> Fjern en bog</h3>
-@if (!Model.Owned.Any())
-{
-    <p>Du har ikke oprettet nogen bøger endnu.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var b in Model.Owned)
-        {
-            <li class="list-group
--item d-flex align-items-center">
-                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
-                     style="height:48px;width:auto;margin-right:12px" />
-                <div class="flex-fill">
-                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
-                </div>
-                <form method="post" asp-page-handler="Delete" class="m-0">
-                    <input type="hidden" name="id" value="@b.Id" />
-                    <button class="btn btn-outline-danger btn-sm">Fjern bog</button>
-                </form>
-            </li>
-    }
-    </ul>
-}
-
-<h3 class="mt-4">Rediger en bog</h3>
-@if (!Model.Owned.Any())
-{
-    <p>Du har ikke oprettet nogen bøger endnu.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var b in Model.Owned)
-        {
-            <li class="list-group
--item d-flex align-items-center">
-                <img src="@(b.ImagePath ?? "/images/book-placeholder.png")" alt=""
-                     style="height:48px;width:auto;margin-right:12px" />
-                <div class="flex-fill">
-                    <strong>@b.Title</strong> <small class="text-muted">@b.Author</small>
-                </div>
-                <a class="btn btn-outline-primary btn-sm" asp-page="/Books/EditBook" asp-route-id="@b.Id">Rediger bog</a>
-            </li>
-    }
-    </ul>
-}
-

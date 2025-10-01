@@ -56,7 +56,22 @@
     <button type="submit" class="btn btn-primary">Gem ændringer</button>
     <a asp-page="/AvailableBooks" class="btn btn-secondary">Annullér</a>
 
+
+<form method="post" enctype="multipart/form-data">
+
+
+    <div class="mb-3">
+        <label asp-for="Input.PdfFile" class="form-label">Erstat PDF (valgfri)</label>
+        <input asp-for="Input.PdfFile" class="form-control" accept="application/pdf" />
+        <span class="form-text">Hvis du vælger en fil her, bliver den nye PDF gemt og brugt fremover.</span>
+        <span asp-validation-for="Input.PdfFile" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gem ændringer</button>
 </form>
+
+</form>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

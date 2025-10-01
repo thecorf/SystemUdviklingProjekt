@@ -4,27 +4,47 @@
     "Password": "",
     "Email": "",
     "Description": "",
-    "ZipCode": 2147483647
+    "ZipCode": 2147483647,
+    "CreatedAt": "2025-10-01T18:29:01.9898749Z"
   },
   {
     "Username": "test",
     "Password": "1234",
     "Email": "",
     "Description": "",
-    "ZipCode": 2147483647
+    "ZipCode": 2147483647,
+    "CreatedAt": "2025-10-01T18:29:01.9898885Z"
   },
   {
     "Username": "Christian",
     "Password": "1234",
     "Email": "",
     "Description": "",
-    "ZipCode": 2147483647
+    "ZipCode": 2147483647,
+    "CreatedAt": "2025-10-01T18:29:01.9898896Z"
   },
   {
     "Username": "Markus",
     "Password": "1234",
     "Email": "",
     "Description": "",
-    "ZipCode": 2147483647
+    "ZipCode": 2147483647,
+    "CreatedAt": "2025-10-01T18:29:01.9898903Z"
+  },
+  {
+    "Username": "TheLazyReader",
+    "Password": "1234",
+    "Email": "LAZY@gmail.com",
+    "Description": "Hvaaaa s\u00E5\u00E5\u00E5",
+    "ZipCode": 2147483647,
+    "CreatedAt": "2025-10-01T18:29:01.9898909Z"
+  },
+  {
+    "Username": "NerdAlert",
+    "Password": "1234",
+    "Email": "NerdAlert@gmail.com",
+    "Description": "Jeg elsker alt der har med viden at g\u00F8re",
+    "ZipCode": 4584,
+    "CreatedAt": "2025-10-01T18:29:01.9900542Z"
   }
 ]

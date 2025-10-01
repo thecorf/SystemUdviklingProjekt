@@ -2,12 +2,11 @@
 {
     public class UserModel
     {
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-
-        public int ZipCode { get; set; } = int.MaxValue;
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";  
+        public string Email { get; set; } = "";
+        public string? Description { get; set; }
+        public int? ZipCode { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

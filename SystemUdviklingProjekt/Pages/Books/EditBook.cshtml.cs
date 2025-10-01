@@ -48,6 +48,7 @@ namespace SystemUdviklingProjekt.Pages.Books
             Input.Description = Book.Description;
             Input.ImageFile = null;
             return Page();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -65,7 +66,6 @@ namespace SystemUdviklingProjekt.Pages.Books
                 return RedirectToPage("/UserProfile");
             }
 
-            // billede
             string? imagePath = book.ImagePath;
             if (Input.ImageFile is not null && Input.ImageFile.Length > 0)
             {
@@ -79,15 +79,51 @@ namespace SystemUdviklingProjekt.Pages.Books
                 imagePath = $"/uploads/books/{fileName}";
             }
 
-            // valider total ift. aktive lejemål
-            var rentedCount = book.RentedByUsers?.Count ?? 0;
-            if (Input.NumberOfBooks < rentedCount)
+            if (Input.PdfFile is { Length: > 0 })
             {
-                ModelState.AddModelError("Input.NumberOfBooks", $"Antal kan ikke være under {rentedCount}, der er aktive lejemål.");
+                if (Path.GetExtension(Input.PdfFile.FileName).ToLowerInvariant() != ".pdf")
+                {
+                    ModelState.AddModelError("Input.PdfFile", "Kun PDF-filer er tilladt.");
+                    return Page();
+                }
+
+                var privateRoot = Path.Combine(_env.ContentRootPath, "Private", "books");
+                Directory.CreateDirectory(privateRoot);
+                var fileName = $"{Guid.NewGuid()}.pdf";
+                var savePath = Path.Combine(privateRoot, fileName);
+                using var fs = System.IO.File.Create(savePath);
+                await Input.PdfFile.CopyToAsync(fs);
+
+                book.PdfPath = Path.Combine("Private", "books", fileName);
+                var rentedCount = book.RentedByUsers?.Count ?? 0;
+                if (Input.NumberOfBooks < rentedCount)
+                {
+                    ModelState.AddModelError("Input.NumberOfBooks", $"Antal kan ikke være under {rentedCount}, der er aktive lejemål.");
+                    return Page();
+                }
+
+                book.Title = Input.Title.Trim();
+                book.Author = Input.Author?.Trim() ?? "";
+                book.Year = Input.Year;
+                book.Genre = Input.Genre;
+                book.NumberOfBooks = Math.Max(1, Input.NumberOfBooks);
+                book.Description = Input.Description;
+                book.ImagePath = imagePath;
+
+                var ok = _repo.Update(book);
+                TempData["Message"] = "Bogen er opdateret.";
+                return RedirectToPage("/Books/Details", new { id = book.Id });
+
+            }
+
+            // If no PDF file is uploaded, update other fields and save
+            var rentedCountNoPdf = book.RentedByUsers?.Count ?? 0;
+            if (Input.NumberOfBooks < rentedCountNoPdf)
+            {
+                ModelState.AddModelError("Input.NumberOfBooks", $"Antal kan ikke være under {rentedCountNoPdf}, der er aktive lejemål.");
                 return Page();
             }
 
-            // opdater
             book.Title = Input.Title.Trim();
             book.Author = Input.Author?.Trim() ?? "";
             book.Year = Input.Year;
@@ -96,9 +132,9 @@ namespace SystemUdviklingProjekt.Pages.Books
             book.Description = Input.Description;
             book.ImagePath = imagePath;
 
-            var ok = _repo.Update(book); 
-            TempData["Message"] = ok ? "Bogen er opdateret." : "Kunne ikke gemme ændringer.";
-            return RedirectToPage("/UserProfile");
+            var okNoPdf = _repo.Update(book);
+            TempData["Message"] = "Bogen er opdateret.";
+            return RedirectToPage("/Books/Details", new { id = book.Id });
         }
     }
 }

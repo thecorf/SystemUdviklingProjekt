@@ -1,0 +1,250 @@
+﻿@page "/Books/Details/{id:guid}"
+@model SystemUdviklingProjekt.Pages.Books.BookDetailsModel
+@{
+    ViewData["Title"] = Model.Book?.Title ?? "Bog";
+}
+
+@if (Model.Book is null)
+{
+    <div class="alert alert-warning">Bogen blev ikke fundet.</div>
+}
+else
+{
+    var b = Model.Book;
+    var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
+
+    <div class="card shadow-sm">
+        <div class="row g-0">
+            <div class="col-12 col-md-4 p-3">
+                <div class="ratio ratio-3x4 rounded overflow-hidden">
+                    <img src="@img" alt="@b.Title" class="w-100 h-100 object-fit-cover" />
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="card-body">
+
+                    @* ---------- Header med titel/forfatter + DOWNLOAD KNAP TIL HØJRE ---------- *@
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h1 class="h3 mb-1">@b.Title</h1>
+                            <div class="text-muted"><em>@b.Author</em></div>
+                        </div>
+
+                        <div class="text-end" style="min-width: 210px;">
+                            @* DOWNLOAD – øverst, helt fri af andre elementer *@
+                            @if (Model.HasRentedThis || Model.IsOwner)
+                            {
+                                <div class="text-end mb-2" style="position:relative; z-index: 9999;">
+                                    @if (!string.IsNullOrEmpty(Model.Book!.PdfPath))
+                                    {
+                                        <a class="btn btn-primary"
+                                           asp-page="/Books/Details"
+                                           asp-page-handler="Download"
+                                           asp-route-id="@Model.Book.Id">
+                                            Download PDF
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary" disabled title="Ingen PDF tilknyttet">Download PDF</button>
+                                    }
+                                </div>
+                            }
+
+                            @if (b.Ratings?.Count > 0)
+                            {
+                                <div>
+                                    <span class="badge bg-warning text-dark">⭐ @b.AverageRating (@b.Ratings.Count)</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @* ---------- Fakta ---------- *@
+                    <dl class="row mb-3">
+                        @if (b.Year is not null)
+                        {
+                            <dt class="col-4 col-sm-3">År</dt>
+                            <dd class="col-8 col-sm-9">@b.Year</dd>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(b.Genre))
+                        {
+                            <dt class="col-4 col-sm-3">Genre</dt>
+                            <dd class="col-8 col-sm-9">@b.Genre</dd>
+                        }
+                        <dt class="col-4 col-sm-3">Tilgængelighed</dt>
+                        <dd class="col-8 col-sm-9">
+                            <span class="badge @(b.IsAvailable ? "bg-success" : "bg-dark")">
+                                @b.AvailableCopies / @b.NumberOfBooks
+                            </span>
+                        </dd>
+                        <dt class="col-4 col-sm-3">Oprettet</dt>
+                        <dd class="col-8 col-sm-9">
+                            @b.CreatedBy • @b.CreatedAt.ToLocalTime().ToString("dd-MM-yyyy HH:mm")
+                        </dd>
+                    </dl>
+
+                    @if (!string.IsNullOrWhiteSpace(b.Description))
+                    {
+                        <p class="mb-3">@b.Description</p>
+                    }
+
+                    @* ---------- Handlinger (uden download) ---------- *@
+                    <div class="d-flex flex-wrap gap-2">
+                        @* Lej *@
+                        @if (Model.IsLoggedIn && b.IsAvailable)
+                        {
+                            <form method="post" asp-page-handler="Rent" class="m-0">
+                                <input type="hidden" name="id" value="@b.Id" />
+                                <button class="btn btn-success">Lej bogen</button>
+                            </form>
+                            @if ((Model.HasRentedThis || Model.IsOwner) && !string.IsNullOrEmpty(Model.Book?.PdfPath))
+                            {
+                                <a class="btn btn-primary"
+                                   asp-page="/Books/Details"
+                                   asp-page-handler="Download"
+                                   asp-route-id="@Model.Book!.Id">
+                                    Download PDF
+                                </a>
+                            }
+
+                        }
+                        else if (!Model.IsLoggedIn)
+                        {
+                            <a class="btn btn-outline-primary"
+                               asp-page="/Login"
+                               asp-route-returnUrl="@Url.Page("/Books/Details", new { id = b.Id })">
+                                Log ind for at leje
+                            </a>
+                        }
+
+                        @* Vurdér *@
+                        @if (Model.IsLoggedIn && Model.HasRentedThis)
+                        {
+                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#rateBookModal">
+                                Vurdér bogen
+                            </button>
+                        }
+
+                        @* Redigér *@
+                        @if (Model.IsOwner)
+                        {
+                            <a class="btn btn-outline-secondary" asp-page="/Books/EditBook" asp-route-id="@b.Id">
+                                Redigér
+                            </a>
+                        }
+
+                        @* Kontakt ejer *@
+                        @if (Model.IsLoggedIn && !Model.IsOwner)
+                        {
+                            <form method="post" asp-page-handler="ContactOwner" class="m-0">
+                                <input type="hidden" name="id" value="@b.Id" />
+                                <button class="btn btn-outline-info">Kontakt ejer</button>
+                            </form>
+                        }
+
+                        <a class="btn btn-light" asp-page="/AvailableBooks">Tilbage</a>
+                    </div>
+
+                    @if (TempData["Message"] is string msg)
+                    {
+                        <div class="alert alert-info mt-3">@msg</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Rating modal: slider + live stjerne-preview ---------- *@
+    <div class="modal fade" id="rateBookModal" tabindex="-1" aria-labelledby="rateBookLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-page-handler="RateUser">
+                    <input type="hidden" name="id" value="@b.Id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rateBookLabel">Vurdér "@b.Title"</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Luk"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label d-block">Stjerner</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <input type="range" min="1" max="5" step="1" value="5" class="form-range flex-grow-1" id="starsRange" name="stars" />
+                                <div id="starsPreview" class="fs-4">★★★★★</div>
+                            </div>
+                            <small class="text-muted">Træk for at vælge 1–5 stjerner.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Kommentar (valgfri)</label>
+                            <textarea id="comment" name="comment" class="form-control" rows="3"
+                                  placeholder="Hvad synes du om bogen?"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annullér</button>
+                        <button type="submit" class="btn btn-warning">Gem vurdering</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Vurderinger ---------- *@
+    @if (b.Ratings?.Count > 0)
+    {
+        <div class="mt-4">
+            <h5 class="mb-3">Vurderinger</h5>
+            <div class="list-group">
+                @foreach (var r in b.Ratings.OrderByDescending(x => x.CreatedAt))
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>@r.Username</strong>
+                            <span>
+                                @{
+                                    var filled = new string('★', r.Stars);
+                                    var empty = new string('☆', 5 - r.Stars);
+                                }
+                                @filled@empty
+                            </span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(r.Comment))
+                        {
+                            <div class="text-muted mt-1">@r.Comment</div>
+                        }
+                        <small class="text-muted">@r.CreatedAt.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</small>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            const range = document.getElementById('starsRange');
+            const out   = document.getElementById('starsPreview');
+            if (range && out) {
+                const paint = (val) => {
+                    const v = Math.max(1, Math.min(5, parseInt(val || '5', 10)));
+                    out.textContent = '★★★★★'.slice(0, v) + '☆☆☆☆☆'.slice(0, 5 - v);
+                };
+                range.addEventListener('input', () => paint(range.value));
+                paint(range.value);
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('rate') === '1') {
+                const m = new bootstrap.Modal(document.getElementById('rateBookModal'));
+                m.show();
+            }
+        })();
+    </script>
+}

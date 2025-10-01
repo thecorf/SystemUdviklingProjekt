@@ -421,3 +421,38 @@ html, body {
         padding-left: 260px;
     }
 }
+
+.btn-primary{
+    background-color: var(--warm-4);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+.star-rate {
+    display: inline-flex;
+    flex-direction: row-reverse; /* 5 ... 1 */
+    gap: .25rem;
+}
+
+    .star-rate input {
+        display: none;
+    }
+
+    .star-rate label {
+        font-size: 1.6rem;
+        cursor: pointer;
+        filter: grayscale(1) opacity(.5);
+        transition: transform .1s ease, filter .15s ease;
+    }
+
+        .star-rate label:hover,
+        .star-rate label:hover ~ label {
+            transform: scale(1.05);
+            filter: none;
+        }
+
+    .star-rate input:checked ~ label {
+        filter: none;
+    }
+
+}
+

@@ -1,70 +1,124 @@
 [
   {
+    "PdfPath": "Private\\books\\621b675b-36c5-4ae7-93f2-29e1b512dbb4.pdf",
     "Id": "101c2904-be71-4472-9ded-36d1d7dbf6cc",
     "Title": "Vejen til Datamatiker",
     "Author": "The One And Only",
     "Year": 2025,
     "Genre": "Fun",
     "Description": "Du bliver s\u00E5 klog...",
-    "ImageUrl": null,
     "ImagePath": "/uploads/books/84e80ba5-a773-443e-8ad9-19677adacc31.jpg",
     "NumberOfBooks": 10,
-    "CreatedBy": "test",
-    "RentedBy": null,
-    "CreatedAt": "2025-09-30T12:45:05.7896727Z",
     "RentedByUsers": [],
-    "AvailableCopies": 10,
-    "IsAvailable": true
+    "CreatedBy": "test",
+    "CreatedAt": "2025-09-30T12:45:05.7896727Z",
+    "Ratings": [
+      {
+        "Username": "NerdAlert",
+        "Stars": 5,
+        "Comment": "Se det her g\u00E5r op i en h\u00F8jere enhed",
+        "CreatedAt": "2025-10-01T18:30:27.0965213Z"
+      }
+    ]
   },
   {
+    "PdfPath": "Private\\books\\dca5b927-05ca-4dbd-b1f3-29404331a365.pdf",
     "Id": "1c4bbf6a-b296-48a1-868a-f0dea535e6b3",
     "Title": "Code101",
     "Author": "Christian",
     "Year": 2025,
     "Genre": "Learning",
     "Description": "Du l\u00E6rer ingenting",
-    "ImageUrl": null,
     "ImagePath": "/uploads/books/b058b3cd-cbde-431d-b384-ee9fc78aed3f.jpg",
     "NumberOfBooks": 10,
-    "CreatedBy": "Christian",
-    "RentedBy": null,
-    "CreatedAt": "2025-09-30T15:27:44.8956385Z",
     "RentedByUsers": [],
-    "AvailableCopies": 10,
-    "IsAvailable": true
+    "CreatedBy": "Christian",
+    "CreatedAt": "2025-09-30T15:27:44.8956385Z",
+    "Ratings": [
+      {
+        "Username": "NerdAlert",
+        "Stars": 5,
+        "Comment": "Elsker det!!",
+        "CreatedAt": "2025-10-01T18:30:38.1695604Z"
+      }
+    ]
   },
   {
+    "PdfPath": "Private\\books\\4c148e74-b992-4d1c-a486-cc172bfe67d7.pdf",
     "Id": "64339ef7-2249-4bba-b1d5-a97166c1ff85",
     "Title": "How to H\u00E6p",
     "Author": "Christian",
     "Year": 2025,
     "Genre": "H\u00E6p",
     "Description": "How to master the \u0022h\u00E6p\u0022",
-    "ImageUrl": null,
     "ImagePath": "/uploads/books/b23d7110-75a8-4313-9824-0f4efa97d2c2.png",
     "NumberOfBooks": 10,
-    "CreatedBy": "Christian",
-    "RentedBy": null,
-    "CreatedAt": "2025-09-30T19:18:43.4604504Z",
     "RentedByUsers": [],
-    "AvailableCopies": 10,
-    "IsAvailable": true
+    "CreatedBy": "Christian",
+    "CreatedAt": "2025-09-30T19:18:43.4604504Z",
+    "Ratings": [
+      {
+        "Username": "NerdAlert",
+        "Stars": 1,
+        "Comment": "Hvad i syv sandaler er \u0022h\u00E6p\u0022?",
+        "CreatedAt": "2025-10-01T18:30:58.5205234Z"
+      }
+    ]
   },
   {
+    "PdfPath": "Private\\books\\c16d1e9a-782c-4010-bb00-2262c0b50ce0.pdf",
     "Id": "0f11b4ee-4a76-412b-b2e3-2f63635b66c1",
     "Title": "GIZ Databaser",
     "Author": "Markus",
     "Year": 2025,
     "Genre": "Giz",
     "Description": "Vejen til den smukkeste giz database",
-    "ImageUrl": null,
     "ImagePath": "/uploads/books/565f03ba-8d91-4bbd-80e3-d0b3e1c1cda7.png",
     "NumberOfBooks": 10,
-    "CreatedBy": "Markus",
-    "RentedBy": null,
-    "CreatedAt": "2025-09-30T20:12:47.8911355Z",
     "RentedByUsers": [],
-    "AvailableCopies": 10,
-    "IsAvailable": true
+    "CreatedBy": "Markus",
+    "CreatedAt": "2025-09-30T20:12:47.8911355Z",
+    "Ratings": [
+      {
+        "Username": "Christian",
+        "Stars": 5,
+        "Comment": "G\u00E5r lige i hjertet",
+        "CreatedAt": "2025-10-01T18:15:16.0927637Z"
+      },
+      {
+        "Username": "test",
+        "Stars": 5,
+        "Comment": "Det er s\u00E5 smukt",
+        "CreatedAt": "2025-10-01T18:16:10.4865663Z"
+      },
+      {
+        "Username": "TheLazyReader",
+        "Stars": 1,
+        "Comment": "Sikke noget kedeligt materiale",
+        "CreatedAt": "2025-10-01T18:27:47.1206017Z"
+      }
+    ]
+  },
+  {
+    "PdfPath": "Private\\books\\e5740e8b-f62f-4f28-aa3c-318ee49abcce.pdf",
+    "Id": "905b2372-fb33-4ef3-b813-8ce36fc9da97",
+    "Title": "How to pj\u00E6k",
+    "Author": "Christian",
+    "Year": 1888,
+    "Genre": "Learning",
+    "Description": "S\u00E5dan undg\u00E5r du din l\u00E6rers vrede ",
+    "ImagePath": "/uploads/books/c3435760-6e15-4a70-a1ad-d3bc16c1300f.jpg",
+    "NumberOfBooks": 10,
+    "RentedByUsers": [],
+    "CreatedBy": "Christian",
+    "CreatedAt": "2025-10-01T13:06:13.9991802Z",
+    "Ratings": [
+      {
+        "Username": "NerdAlert",
+        "Stars": 1,
+        "Comment": "Jeg elsker skole s\u00E5 kunne ikke se hvorfor denne bog skulle v\u00E6re relevant for min h\u00F8jere intelligens?",
+        "CreatedAt": "2025-10-01T18:30:03.4554402Z"
+      }
+    ]
   }
 ]
