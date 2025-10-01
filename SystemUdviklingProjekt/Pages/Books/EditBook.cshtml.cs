@@ -9,23 +9,60 @@ using static CreateBookModel;
 
 namespace SystemUdviklingProjekt.Pages.Books
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class EditBookModel : PageModel
     {
+        /// <summary>
+        /// The repo
+        /// </summary>
         private readonly BooksRepository _repo;
+        /// <summary>
+        /// The env
+        /// </summary>
         private readonly IWebHostEnvironment _env;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditBookModel"/> class.
+        /// </summary>
+        /// <param name="repo">The repo.</param>
+        /// <param name="env">The env.</param>
         public EditBookModel(BooksRepository repo, IWebHostEnvironment env)
         {
             _repo = repo;
             _env = env;
         }
 
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         [BindProperty(SupportsGet = true)]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the input.
+        /// </summary>
+        /// <value>
+        /// The input.
+        /// </value>
         [BindProperty] public BookInput Input { get; set; } = new();
+        /// <summary>
+        /// Gets or sets the book.
+        /// </summary>
+        /// <value>
+        /// The book.
+        /// </value>
         public BookModel? Book { get; set; }
 
+        /// <summary>
+        /// Called when [get].
+        /// </summary>
+        /// <returns></returns>
         public IActionResult OnGet()
         {
             var username = HttpContext.Session.GetString("Username");
@@ -39,6 +76,7 @@ namespace SystemUdviklingProjekt.Pages.Books
                 TempData["Message"] = "Du har ikke tilladelse til at redigere denne bog.";
                 return RedirectToPage("/UserProfile");
             }
+            // Populate Input model with existing book data
 
             Input.Title = Book.Title;
             Input.Author = Book.Author;
@@ -51,7 +89,9 @@ namespace SystemUdviklingProjekt.Pages.Books
 
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        /// <summary>
+        ///     
+        public async Task<IActionResult> OnPostAsync() // Called when [post asynchronous].
         {
             var username = HttpContext.Session.GetString("Username");
             if (string.IsNullOrEmpty(username))
@@ -67,9 +107,9 @@ namespace SystemUdviklingProjekt.Pages.Books
             }
 
             string? imagePath = book.ImagePath;
-            if (Input.ImageFile is not null && Input.ImageFile.Length > 0)
+            if (Input.ImageFile is not null && Input.ImageFile.Length > 0) // New image uploaded
             {
-                var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads", "books");
+                var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads", "books"); // wwwroot/uploads/books
                 Directory.CreateDirectory(uploadsRoot);
                 var ext = Path.GetExtension(Input.ImageFile.FileName);
                 var fileName = $"{Guid.NewGuid()}{ext}";
@@ -87,13 +127,14 @@ namespace SystemUdviklingProjekt.Pages.Books
                     return Page();
                 }
 
-                var privateRoot = Path.Combine(_env.ContentRootPath, "Private", "books");
+                var privateRoot = Path.Combine(_env.ContentRootPath, "Private", "books"); // ContentRoot/Private/books
                 Directory.CreateDirectory(privateRoot);
                 var fileName = $"{Guid.NewGuid()}.pdf";
                 var savePath = Path.Combine(privateRoot, fileName);
                 using var fs = System.IO.File.Create(savePath);
                 await Input.PdfFile.CopyToAsync(fs);
 
+                // Update the PdfPath to the new file
                 book.PdfPath = Path.Combine("Private", "books", fileName);
                 var rentedCount = book.RentedByUsers?.Count ?? 0;
                 if (Input.NumberOfBooks < rentedCount)
@@ -101,7 +142,7 @@ namespace SystemUdviklingProjekt.Pages.Books
                     ModelState.AddModelError("Input.NumberOfBooks", $"Antal kan ikke være under {rentedCount}, der er aktive lejemål.");
                     return Page();
                 }
-
+                // Update other fields and save
                 book.Title = Input.Title.Trim();
                 book.Author = Input.Author?.Trim() ?? "";
                 book.Year = Input.Year;

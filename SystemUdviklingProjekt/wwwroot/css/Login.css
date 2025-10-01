@@ -1,4 +1,7 @@
-﻿html {
+﻿/* =========================================
+   Global base and typography (login page)
+   ========================================= */
+html {
     font-size: 14px;
 }
 
@@ -8,19 +11,24 @@
     }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+/* Accessible focus ring */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* Provide positioning context if needed */
 html {
     position: relative;
     min-height: 100%;
 }
 
+/* Optional hero spacing for an About header on login layout */
 #AboutHeader {
     padding-top: 15vh;
 }
 
+/* Base reset & font family */
 html, body {
     margin: 0;
     padding: 0;
@@ -29,6 +37,9 @@ html, body {
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* =========================================
+   Login form layout and components
+   ========================================= */
 .wrapper {
     display: flex;
     justify-content: center;
@@ -83,7 +94,7 @@ html, body {
 .login-button {
     width: 100%;
     padding: 12px;
-    background-color: #007BFF; /* blå knap */
+    background-color: #007BFF;
     color: white;
     font-weight: bold;
     border: none;
@@ -110,6 +121,7 @@ html, body {
         text-decoration: none;
     }
 
+/* Simple login page widgets */
 #eventBox {
     background-color: lightgray;
     margin-top: 1.5em;

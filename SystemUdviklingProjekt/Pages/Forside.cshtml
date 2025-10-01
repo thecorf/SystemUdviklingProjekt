@@ -1,18 +1,22 @@
 ﻿@page "/Forside"
 @model SystemUdviklingProjekt.Pages.ForsideModel
 @{
+    // Sets the page title for the browser tab and layout
     ViewData["Title"] = "Rent My Library";
 }
 
+<!-- Hero section with welcome message and description -->
 <div class="hero-books mb-4">
     <h1 class="display-5 fw-bold mb-2">Velkommen til din varme bogreol 📚</h1>
     <p class="lead mb-3">Del dine bøger med andre – og find noget nyt at læse. En lille klub med store historier.</p>
 
+    <!-- Displays statistics: available books and total books -->
     <div class="d-flex flex-wrap align-items-center gap-2 mb-3 hero-actions">
         <span class="stat-chip"><strong>@Model.AvailableBooks</strong> ledige bøger</span>
         <span class="stat-chip"><strong>@Model.TotalBooks</strong> i alt</span>
     </div>
 
+    <!-- Action buttons: view available books, create book (if logged in), or login prompt -->
     <div class="hero-actions">
         <a class="btn btn-light btn-lg" asp-page="/AvailableBooks">Se ledige bøger</a>
         @if (Model.IsLoggedIn)
@@ -26,9 +30,11 @@
     </div>
 </div>
 
+<!-- Grid of latest books -->
 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xxl-6 g-2">
     @foreach (var b in Model.Latest)
     {
+        // Use placeholder image if no image path is provided
         var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
         <div class="col">
             <div class="paper-card compact h-100">
@@ -36,12 +42,16 @@
                     <img src="@img" alt="@b.Title" class="rounded-top" />
                 </div>
                 <div class="p-3 d-flex flex-column">
+                    <!-- Book title -->
                     <h3 class="h6 mb-1 line-2">@b.Title</h3>
+                    <!-- Book author -->
                     <div class="text-muted mb-2"><em>@b.Author</em></div>
+                    <!-- Book description, if available -->
                     @if (!string.IsNullOrWhiteSpace(b.Description))
                     {
                         <p class="mb-3 line-3">@b.Description</p>
                     }
+                    <!-- Availability badge and link to more details -->
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                         <span class="badge @(b.IsAvailable ? "bg-success" : "bg-secondary")">
                             @(b.IsAvailable ? "Ledig" : "Udlejet")

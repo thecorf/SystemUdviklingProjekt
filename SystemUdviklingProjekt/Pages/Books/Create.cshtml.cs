@@ -4,19 +4,43 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SystemUdviklingProjekt.Model;
 using SystemUdviklingProjekt.Service;
 
+/// <summary>
+/// 
+/// </summary>
 public class CreateBookModel : PageModel
 {
+    /// <summary>
+    /// The repo
+    /// </summary>
     private readonly BooksRepository _repo;
+    /// <summary>
+    /// The env
+    /// </summary>
     private readonly IWebHostEnvironment _env;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateBookModel"/> class.
+    /// </summary>
+    /// <param name="repo">The repo.</param>
+    /// <param name="env">The env.</param>
     public CreateBookModel(BooksRepository repo, IWebHostEnvironment env)
     {
         _repo = repo;
         _env = env;
     }
 
+    /// <summary>
+    /// Gets or sets the input.
+    /// </summary>
+    /// <value>
+    /// The input.
+    /// </value>
     [BindProperty] public BookInput Input { get; set; } = new();
 
+    /// <summary>Called when [get].</summary>
+    /// <returns>
+    ///   <br />
+    /// </returns>
     public IActionResult OnGet()
     {
         if (string.IsNullOrEmpty(HttpContext.Session.GetString("Username")))
@@ -24,6 +48,10 @@ public class CreateBookModel : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Called when [post asynchronous].
+    /// </summary>
+    /// <returns></returns>
     public async Task<IActionResult> OnPostAsync()
     {
         var username = HttpContext.Session.GetString("Username");
@@ -86,29 +114,80 @@ public class CreateBookModel : PageModel
         return RedirectToPage("/Books/Details", new { id = book.Id });
     }
 }
-    public class BookInput
+/// <summary>
+/// 
+/// </summary>
+public class BookInput
     {
-        [Required, Display(Name = "Titel")]
+    /// <summary>
+    /// Gets or sets the title.
+    /// </summary>
+    /// <value>
+    /// The title.
+    /// </value>
+    [Required, Display(Name = "Titel")]
         public string Title { get; set; } = string.Empty;
 
-        [Display(Name = "Forfatter")]
+    /// <summary>
+    /// Gets or sets the author.
+    /// </summary>
+    /// <value>
+    /// The author.
+    /// </value>
+    [Display(Name = "Forfatter")]
         public string? Author { get; set; }
 
-        [Display(Name = "År")]
+    /// <summary>
+    /// Gets or sets the year.
+    /// </summary>
+    /// <value>
+    /// The year.
+    /// </value>
+    [Display(Name = "År")]
         public int? Year { get; set; }
 
-        [Display(Name = "Genre")]
+    /// <summary>
+    /// Gets or sets the genre.
+    /// </summary>
+    /// <value>
+    /// The genre.
+    /// </value>
+    [Display(Name = "Genre")]
         public string? Genre { get; set; }
 
-        [Range(1, 999), Display(Name = "Antal bøger")]
+    /// <summary>
+    /// Gets or sets the number of books.
+    /// </summary>
+    /// <value>
+    /// The number of books.
+    /// </value>
+    [Range(1, 999), Display(Name = "Antal bøger")]
         public int NumberOfBooks { get; set; } = 1;
 
-        [Display(Name = "Beskrivelse")]
+    /// <summary>
+    /// Gets or sets the description.
+    /// </summary>
+    /// <value>
+    /// The description.
+    /// </value>
+    [Display(Name = "Beskrivelse")]
         public string? Description { get; set; }
 
-        [Display(Name = "Billede")]
+    /// <summary>
+    /// Gets or sets the image file.
+    /// </summary>
+    /// <value>
+    /// The image file.
+    /// </value>
+    [Display(Name = "Billede")]
         public IFormFile? ImageFile { get; set; }
-        public IFormFile? PdfFile { get; set; }
+    /// <summary>
+    /// Gets or sets the PDF file.
+    /// </summary>
+    /// <value>
+    /// The PDF file.
+    /// </value>
+    public IFormFile? PdfFile { get; set; }
     }
 
 

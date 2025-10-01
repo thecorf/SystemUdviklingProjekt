@@ -34,7 +34,7 @@
                         </button>
                     </li>
 
-                    <!-- Forside -->
+                    
                     <li class="@(page() == "/Forside" ? "active" : "")">
                         <a asp-page="/Forside">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Z" /></svg>
@@ -42,7 +42,7 @@
                         </a>
                     </li>
 
-                    <!-- Ledige bøger -->
+                    
                     <li class="@(page() == "/AvailableBooks" ? "active" : "")">
                         <a asp-page="/AvailableBooks">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M300-80q-58 0-99-41t-41-99v-520q0-58 41-99t99-41h500v600H300Z" /></svg>
@@ -50,7 +50,7 @@
                         </a>
                     </li>
 
-                    <!-- Opret bog (kun logget ind) -->
+                    
                     @if (isLoggedIn)
                     {
                         <li class="@(page() == "/Books/Create" ? "active" : "")">
@@ -61,7 +61,7 @@
                         </li>
                     }
 
-                    <!-- Min profil (kun logget ind) -->
+                    
                     @if (isLoggedIn)
                     {
                         <li class="@(page() == "/UserProfile" ? "active" : "")">
@@ -71,8 +71,17 @@
                             </a>
                         </li>
                     }
+                    @if (isLoggedIn)
+                    {
+                        <li class="@(page() == "/Members" ? "active" : "")">
+                            <a asp-page="/Members">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-520q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0 80q92 0 170.5 44T780-280v80H180v-80q49-72 127.5-116T480-440Z" /></svg>
+                                <span>Medlemmer</span>
+                            </a>
+                        </li>
+                    }
 
-                    <!-- Login (vises når man IKKE er logget ind) -->
+                    
                     @if (!isLoggedIn)
                     {
                         <li class="@(page() == "/Login" ? "active" : "")">
@@ -83,7 +92,7 @@
                         </li>
                     }
 
-                    <!-- Brugernavn + Logout (vises når man ER logget ind) -->
+                    
                     @if (isLoggedIn)
                     {
                         <li class="mt-auto">

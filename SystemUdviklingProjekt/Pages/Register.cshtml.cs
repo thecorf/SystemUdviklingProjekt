@@ -5,38 +5,118 @@ using SystemUdviklingProjekt.Model;
 
 namespace SystemUdviklingProjekt.Pages
 {
-    ///<summary> Represents the model for the Register page. </summary>
+    /// <summary>
+    /// Represents the model for the Register page.
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class RegisterModel : PageModel
     {
         // Formfelter
+        /// <summary>
+        /// Gets or sets the username.
+        /// </summary>
+        /// <value>
+        /// The username.
+        /// </value>
         [BindProperty] public string Username { get; set; } = "";
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>
+        /// The password.
+        /// </value>
         [BindProperty] public string Password { get; set; } = "";
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         [BindProperty] public string Name { get; set; } = "";
+        /// <summary>
+        /// Gets or sets the phone.
+        /// </summary>
+        /// <value>
+        /// The phone.
+        /// </value>
         [BindProperty] public string Phone { get; set; } = "";
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>
+        /// The email.
+        /// </value>
         [BindProperty] public string Email { get; set; } = "";
+        /// <summary>
+        /// Gets or sets the zip code.
+        /// </summary>
+        /// <value>
+        /// The zip code.
+        /// </value>
         [BindProperty] public int ZipCode { get; set; }
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
         [BindProperty] public string? Description { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="RegisterModel"/> is isadministrator.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if isadministrator; otherwise, <c>false</c>.
+        /// </value>
         [BindProperty] public bool isadministrator { get; set; } = false;
 
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
         public string? Message { get; set; }
 
+        /// <summary>
+        /// The login file path
+        /// </summary>
         private readonly string loginFilePath;
+        /// <summary>
+        /// The members file path
+        /// </summary>
         private readonly string membersFilePath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegisterModel"/> class.
+        /// </summary>
+        /// <param name="env">The env.</param>
         public RegisterModel(IWebHostEnvironment env)
         {
             loginFilePath = Path.Combine(env.ContentRootPath, "JSON", "login.json");
             membersFilePath = Path.Combine(env.ContentRootPath, "JSON", "members.json");
         }
 
+        /// <summary>
+        /// Gets or sets the members.
+        /// </summary>
+        /// <value>
+        /// The members.
+        /// </value>
         public List<Member> Members { get; set; } = new();
 
+        /// <summary>
+        /// Called when [get].
+        /// </summary>
         public void OnGet() { }
 
+        /// <summary>
+        /// Called when [post].
+        /// </summary>
+        /// <returns></returns>
         public IActionResult OnPost()
         {
-            // Simple validering
+           
             if (string.IsNullOrWhiteSpace(Username) ||
                 string.IsNullOrWhiteSpace(Password) ||
                 string.IsNullOrWhiteSpace(Name) ||
@@ -47,11 +127,12 @@ namespace SystemUdviklingProjekt.Pages
                 return Page();
             }
 
-            // Sørg for at JSON-mappen findes
+
+            // Ensure the JSON directory exists
             Directory.CreateDirectory(Path.GetDirectoryName(loginFilePath)!);
             Directory.CreateDirectory(Path.GetDirectoryName(membersFilePath)!);
 
-            // --- Hent eksisterende brugere (liste) ---
+            // Load existing users
             var users = new List<UserModel>();
             if (System.IO.File.Exists(loginFilePath))
             {
@@ -62,13 +143,13 @@ namespace SystemUdviklingProjekt.Pages
                 }
                 catch
                 {
-                    // hvis den gamle fil er et enkelt objekt, konverter til liste
+                  
                     var single = JsonSerializer.Deserialize<UserModel>(json);
                     if (single != null) users.Add(single);
                 }
             }
 
-            // Tjek brugernavn unikt
+            // Check for duplicate username
             if (users.Any(u => !string.IsNullOrEmpty(u.Username) &&
                                u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
@@ -76,16 +157,20 @@ namespace SystemUdviklingProjekt.Pages
                 return Page();
             }
 
-            // --- Opret User og GEM ALLE FELTER ---
+
+            // Create and save new user
+
             var newUser = new UserModel
             {
                 Username = Username.Trim(),
-                Password = Password, // TODO: hash i produktion
+                Password = Password, 
                 Email = Email.Trim(),
                 Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim(),
                 ZipCode = ZipCode,
                 CreatedAt = DateTime.UtcNow
             };
+
+            // Add to users list and save
 
             users.Add(newUser);
             System.IO.File.WriteAllText(
@@ -93,7 +178,8 @@ namespace SystemUdviklingProjekt.Pages
                 JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true })
             );
 
-            // --- Hent/skriv members.json som før ---
+
+            // Load existing members
             var members = new List<Member>();
             if (System.IO.File.Exists(membersFilePath))
             {
@@ -101,7 +187,7 @@ namespace SystemUdviklingProjekt.Pages
                 members = JsonSerializer.Deserialize<List<Member>>(json) ?? new();
             }
 
-            // Vælg tilfældigt avatar
+            // Select a random avatar
             var avatars = new[]
             {
                 "Avatar1.jpg","Avatar2.jpg","Avatar3.jpg","Avatar4.jpg","Avatar5.jpg",
@@ -114,6 +200,7 @@ namespace SystemUdviklingProjekt.Pages
                 ID = members.Count + 1
             };
 
+            // Add to members list and save
             members.Add(newMember);
             System.IO.File.WriteAllText(
                 membersFilePath,

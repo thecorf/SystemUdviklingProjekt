@@ -13,23 +13,28 @@
         <span asp-validation-for="Input.Title" class="text-danger"></span>
     </div>
     <div class="mb-3">
+        <!-- Author input -->
         <label asp-for="Input.Author" class="form-label"></label>
         <input asp-for="Input.Author" class="form-control" />
     </div>
     <div class="mb-3">
+        <!-- Year input -->
         <label asp-for="Input.Year" class="form-label"></label>
         <input asp-for="Input.Year" class="form-control" />
     </div>
     <div class="mb-3">
+        <!-- Genre input -->
         <label asp-for="Input.Genre" class="form-label"></label>
         <input asp-for="Input.Genre" class="form-control" />
     </div>
     <div class="mb-3">
+        <!-- Number of books input -->
         <label asp-for="Input.NumberOfBooks" class="form-label"></label>
         <input asp-for="Input.NumberOfBooks" class="form-control" type="number" min="1" />
         <span asp-validation-for="Input.NumberOfBooks" class="text-danger"></span>
     </div>
     <div class="mb-3">
+        <!-- Description input -->
         <label asp-for="Input.Description" class="form-label"></label>
         <textarea asp-for="Input.Description" class="form-control"></textarea>
     </div>

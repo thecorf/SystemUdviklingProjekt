@@ -1,6 +1,7 @@
 ﻿@page "/Books/Details/{id:guid}"
 @model SystemUdviklingProjekt.Pages.Books.BookDetailsModel
 @{
+    // Page title uses the book title if available; otherwise a fallback
     ViewData["Title"] = Model.Book?.Title ?? "Bog";
 }
 
@@ -10,21 +11,30 @@
 }
 else
 {
-    var b = Model.Book;
-    var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
+    
+        
+        // Local shorthand to reduce repetition
+        var b = Model.Book!;
+        // Cover image path with a placeholder fallback when ImagePath is empty
+        var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
+    
 
     <div class="card shadow-sm">
         <div class="row g-0">
+
+            @* Left column: book cover *@
             <div class="col-12 col-md-4 p-3">
+                @* Keep aspect ratio 3:4 and crop with object-fit *@
                 <div class="ratio ratio-3x4 rounded overflow-hidden">
                     <img src="@img" alt="@b.Title" class="w-100 h-100 object-fit-cover" />
                 </div>
             </div>
 
+            @* Right column: details and actions *@
             <div class="col-12 col-md-8">
                 <div class="card-body">
 
-                    @* ---------- Header med titel/forfatter + DOWNLOAD KNAP TIL HØJRE ---------- *@
+                    @* Header: title/author on the left, utilities on the right *@
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <div>
                             <h1 class="h3 mb-1">@b.Title</h1>
@@ -32,16 +42,17 @@ else
                         </div>
 
                         <div class="text-end" style="min-width: 210px;">
-                            @* DOWNLOAD – øverst, helt fri af andre elementer *@
+
+                            @* PDF download is visible only to the renter or the owner *@
                             @if (Model.HasRentedThis || Model.IsOwner)
                             {
                                 <div class="text-end mb-2" style="position:relative; z-index: 9999;">
-                                    @if (!string.IsNullOrEmpty(Model.Book!.PdfPath))
+                                    @if (!string.IsNullOrEmpty(b.PdfPath))
                                     {
                                         <a class="btn btn-primary"
                                            asp-page="/Books/Details"
                                            asp-page-handler="Download"
-                                           asp-route-id="@Model.Book.Id">
+                                           asp-route-id="@b.Id">
                                             Download PDF
                                         </a>
                                     }
@@ -52,6 +63,7 @@ else
                                 </div>
                             }
 
+                            @* Average rating badge (only if there are ratings) *@
                             @if (b.Ratings?.Count > 0)
                             {
                                 <div>
@@ -63,7 +75,7 @@ else
 
                     <hr />
 
-                    @* ---------- Fakta ---------- *@
+                    @* Metadata list *@
                     <dl class="row mb-3">
                         @if (b.Year is not null)
                         {
@@ -92,25 +104,28 @@ else
                         <p class="mb-3">@b.Description</p>
                     }
 
-                    @* ---------- Handlinger (uden download) ---------- *@
+                    @* Primary action bar *@
                     <div class="d-flex flex-wrap gap-2">
-                        @* Lej *@
+
+                        @* Rent (Lej) button: only when logged in and there are copies available *@
                         @if (Model.IsLoggedIn && b.IsAvailable)
                         {
                             <form method="post" asp-page-handler="Rent" class="m-0">
+                                @* @Html.AntiForgeryToken() // add if you have antiforgery enabled *@
                                 <input type="hidden" name="id" value="@b.Id" />
                                 <button class="btn btn-success">Lej bogen</button>
                             </form>
-                            @if ((Model.HasRentedThis || Model.IsOwner) && !string.IsNullOrEmpty(Model.Book?.PdfPath))
+
+                            @* Convenience: show download here as well for renter/owner if PDF exists *@
+                            @if ((Model.HasRentedThis || Model.IsOwner) && !string.IsNullOrEmpty(b.PdfPath))
                             {
                                 <a class="btn btn-primary"
                                    asp-page="/Books/Details"
                                    asp-page-handler="Download"
-                                   asp-route-id="@Model.Book!.Id">
+                                   asp-route-id="@b.Id">
                                     Download PDF
                                 </a>
                             }
-
                         }
                         else if (!Model.IsLoggedIn)
                         {
@@ -121,7 +136,7 @@ else
                             </a>
                         }
 
-                        @* Vurdér *@
+                        @* Rating modal trigger: only renters can rate *@
                         @if (Model.IsLoggedIn && Model.HasRentedThis)
                         {
                             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#rateBookModal">
@@ -129,7 +144,7 @@ else
                             </button>
                         }
 
-                        @* Redigér *@
+                        @* Owner-only edit action *@
                         @if (Model.IsOwner)
                         {
                             <a class="btn btn-outline-secondary" asp-page="/Books/EditBook" asp-route-id="@b.Id">
@@ -137,10 +152,11 @@ else
                             </a>
                         }
 
-                        @* Kontakt ejer *@
+                        @* Non-owner contact action *@
                         @if (Model.IsLoggedIn && !Model.IsOwner)
                         {
                             <form method="post" asp-page-handler="ContactOwner" class="m-0">
+                                @* @Html.AntiForgeryToken() *@
                                 <input type="hidden" name="id" value="@b.Id" />
                                 <button class="btn btn-outline-info">Kontakt ejer</button>
                             </form>
@@ -158,11 +174,12 @@ else
         </div>
     </div>
 
-    @* ---------- Rating modal: slider + live stjerne-preview ---------- *@
+    @* Bootstrap rating modal *@
     <div class="modal fade" id="rateBookModal" tabindex="-1" aria-labelledby="rateBookLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form method="post" asp-page-handler="RateUser">
+                    @* @Html.AntiForgeryToken() *@
                     <input type="hidden" name="id" value="@b.Id" />
                     <div class="modal-header">
                         <h5 class="modal-title" id="rateBookLabel">Vurdér "@b.Title"</h5>
@@ -173,7 +190,8 @@ else
                         <div class="mb-3">
                             <label class="form-label d-block">Stjerner</label>
                             <div class="d-flex align-items-center gap-3">
-                                <input type="range" min="1" max="5" step="1" value="5" class="form-range flex-grow-1" id="starsRange" name="stars" />
+                                <input type="range" min="1" max="5" step="1" value="5"
+                                       class="form-range flex-grow-1" id="starsRange" name="stars" />
                                 <div id="starsPreview" class="fs-4">★★★★★</div>
                             </div>
                             <small class="text-muted">Træk for at vælge 1–5 stjerner.</small>
@@ -182,7 +200,7 @@ else
                         <div class="mb-3">
                             <label for="comment" class="form-label">Kommentar (valgfri)</label>
                             <textarea id="comment" name="comment" class="form-control" rows="3"
-                                  placeholder="Hvad synes du om bogen?"></textarea>
+                                      placeholder="Hvad synes du om bogen?"></textarea>
                         </div>
                     </div>
 
@@ -195,7 +213,7 @@ else
         </div>
     </div>
 
-    @* ---------- Vurderinger ---------- *@
+    @* Ratings list *@
     @if (b.Ratings?.Count > 0)
     {
         <div class="mt-4">
@@ -229,6 +247,7 @@ else
 @section Scripts {
     <script>
         (function () {
+            // Live star preview for the rating slider.
             const range = document.getElementById('starsRange');
             const out   = document.getElementById('starsPreview');
             if (range && out) {
@@ -240,6 +259,7 @@ else
                 paint(range.value);
             }
 
+            // Deep-link: if URL contains ?rate=1, open the rating modal automatically.
             const params = new URLSearchParams(window.location.search);
             if (params.get('rate') === '1') {
                 const m = new bootstrap.Modal(document.getElementById('rateBookModal'));

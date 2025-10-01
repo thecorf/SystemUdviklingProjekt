@@ -1,25 +1,29 @@
 ﻿@page "/AvailableBooks"
 @model SystemUdviklingProjekt.Pages.AvailableBooksModel
 @{
+    // Sets the page title in the layout
     ViewData["Title"] = "Ledige bøger";
 }
 
 <h1 class="mb-3">Ledige bøger</h1>
 
-<!-- FILTERBAR (GET-form) -->
+<!-- Filter form for searching available books by title, author, genre, and year -->
 <form method="get" class="row g-2 align-items-end mb-3">
     <div class="col-12 col-sm-3">
         <label asp-for="Title" class="form-label">Titel</label>
+        <!-- Input for book title -->
         <input asp-for="Title" class="form-control" placeholder="Fx 'Ringenes Herre'" />
     </div>
 
     <div class="col-12 col-sm-3">
         <label asp-for="Author" class="form-label">Forfatter</label>
+        <!-- Input for book author -->
         <input asp-for="Author" class="form-control" placeholder="Fx 'Nesbø'" />
     </div>
 
     <div class="col-12 col-sm-3">
         <label asp-for="Genre" class="form-label">Genre</label>
+        <!-- Dropdown for selecting book genre -->
         <select asp-for="Genre" class="form-select">
             <option value="">Alle genrer</option>
             @foreach (var g in Model.Genres)
@@ -31,62 +35,73 @@
 
     <div class="col-6 col-sm-2">
         <label asp-for="Year" class="form-label">År</label>
+        <!-- Input for book publication year -->
         <input asp-for="Year" class="form-control" type="number" min="0" />
     </div>
 
     <div class="col-6 col-sm-1 d-grid">
+        <!-- Submit button for filtering books -->
         <button type="submit" class="btn btn-primary">Filtrér</button>
     </div>
 
     <div class="col-6 col-sm-2 d-grid">
+        <!-- Link to reset filters -->
         <a asp-page="/AvailableBooks" class="btn btn-outline-secondary">Ryd</a>
     </div>
 </form>
 
-<!-- Opret / login -->
+<!-- Message display and create book button -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         @if (TempData["Message"] is string msg)
         {
+            <!-- Info message from TempData -->
             <div class="alert alert-info mb-0">@msg</div>
         }
     </div>
 
     @if (Model.IsLoggedIn)
     {
+        <!-- Button to create a new book if logged in -->
         <a class="btn btn-primary" asp-page="/Books/Create">Opret bog</a>
     }
     else
     {
+        <!-- Disabled button and login link if not logged in -->
         <a class="btn btn-outline-secondary disabled" aria-disabled="true">Log ind for at oprette</a>
         <a class="btn btn-link" asp-page="/Login" asp-route-returnUrl="/AvailableBooks">Log ind</a>
     }
 </div>
 
+<!-- Display message if no books match the filter -->
 @if (!Model.Books.Any())
 {
     <p>Ingen bøger matcher dit filter.</p>
 }
 else
 {
+    <!-- Display available books in a responsive grid -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var b in Model.Books)
         {
+            // Use placeholder image if no image is provided
             var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "/images/book-placeholder.png" : b.ImagePath;
 
             <div class="col">
                 <div class="card h-100 shadow-sm book-card position-relative">
                     <div class="ratio ratio-3x4">
+                        <!-- Book cover image -->
                         <img src="@img" alt="@b.Title" class="rounded-top" />
                     </div>
 
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start">
+                            <!-- Book title -->
                             <h5 class="card-title book-title mb-1 me-2">@b.Title</h5>
 
-                            @* Gennemsnitsvurdering på kortet *@
                             @if (b.Ratings != null && b.Ratings.Count > 0)
                             {
+                                <!-- Display average rating and number of ratings -->
                                 <span class="badge bg-warning text-dark">
                                     ⭐ @b.AverageRating (@b.Ratings.Count)
                                 </span>
@@ -94,33 +109,40 @@ else
                         </div>
 
                         <div class="text-muted mb-2">
+                            <!-- Book author -->
                             <em>@b.Author</em>
                             @if (b.Year is not null)
                             {
+                                <!-- Book year -->
                                 <span> · @b.Year</span>
                             }
                             @if (!string.IsNullOrWhiteSpace(b.Genre))
                             {
+                                <!-- Book genre -->
                                 <span> · @b.Genre</span>
                             }
                         </div>
 
                         @if (!string.IsNullOrWhiteSpace(b.Description))
                         {
+                            <!-- Book description -->
                             <p class="card-text book-desc flex-grow-1">@b.Description</p>
                         }
                         else
                         {
+                            <!-- Filler for layout if no description -->
                             <div class="flex-grow-1"></div>
                         }
 
                         <div class="d-flex justify-content-between align-items-center mt-2">
+                            <!-- Display available copies and total number of books -->
                             <span class="badge bg-secondary">
                                 Ledige: @b.AvailableCopies / @b.NumberOfBooks
                             </span>
 
                             @if (Model.IsLoggedIn)
                             {
+                                <!-- Rent button if logged in, disabled if no copies available -->
                                 <form method="post" asp-page-handler="Rent" class="m-0">
                                     <input type="hidden" name="id" value="@b.Id" />
                                     <button class="btn btn-success btn-sm" type="submit" @(b.AvailableCopies == 0 ? "disabled" : null)>
@@ -130,13 +152,14 @@ else
                             }
                             else
                             {
+                                <!-- Disabled rent button if not logged in -->
                                 <a class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">
                                     Log ind for at leje
                                 </a>
                             }
                         </div>
 
-                        
+                        <!-- Link to book details page -->
                         <a class="stretched-link" asp-page="/Books/Details" asp-route-id="@b.Id"></a>
                     </div>
                 </div>
